@@ -6,4 +6,6 @@ import com.capgemini.courseproject.entities.Enrollment;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>{
 
+	boolean exists(Enrollment enrollment);
+
 }
