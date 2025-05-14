@@ -1,41 +1,41 @@
 package com.capgemini.courseproject.entities;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
-public class Assignment{
+@Table(name = "assignments")
+public class Assignment {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "assignment_id")
 	private Long assignmentId;
-	
-	@NotNull(message = "Course ID is mandatory")
-	private Long courseId;
-	
-	@NotBlank(message = "Title is mandatory")
-    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
-    private String title;
-	
-	@NotBlank(message = "Description is mandatory")
-	private String description;
-	
-	public Assignment() {
-		
-	}
 
-	public Assignment(Long assignmentId, Long courseId, String title, String description) {
+	@ManyToOne
+	@JoinColumn(name = "courseId")
+	private Course course;
+
+	private String title;
+
+	private String description;
+
+	@OneToMany(mappedBy = "assignment")
+	private List<Submission> submissions;
+
+
+	public Assignment(Long assignmentId, Course course, String title, String description,
+			List<Submission> submissions) {
 		super();
 		this.assignmentId = assignmentId;
-		this.courseId = courseId;
+		this.course = course;
 		this.title = title;
 		this.description = description;
+		this.submissions = submissions;
+	}
+
+	public Assignment() {
+		super();
 	}
 
 	public Long getAssignmentId() {
@@ -46,12 +46,12 @@ public class Assignment{
 		this.assignmentId = assignmentId;
 	}
 
-	public Long getCourseId() {
-		return courseId;
+	public Course getCourse() {
+		return course;
 	}
 
-	public void setCourseId(Long courseId) {
-		this.courseId = courseId;
+	public void setCourse(Course course) {
+		this.course = course;
 	}
 
 	public String getTitle() {
@@ -70,11 +70,18 @@ public class Assignment{
 		this.description = description;
 	}
 
+	public List<Submission> getSubmissions() {
+		return submissions;
+	}
+
+	public void setSubmissions(List<Submission> submissions) {
+		this.submissions = submissions;
+	}
+
 	@Override
 	public String toString() {
-		return "Assignments [AssignmentID=" + assignmentId + ", CourseID=" + courseId + ", Title=" + title
-				+ ", Description=" + description + "]";
+		return "Assignment [assignmentId=" + assignmentId + ", course=" + course + ", title=" + title + ", description="
+				+ description + ", submissions=" + submissions + "]";
 	}
-	
-	
+
 }
