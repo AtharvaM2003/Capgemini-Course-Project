@@ -24,18 +24,36 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
-	
-	@ExceptionHandler(AssignmentNotFoundException.class)
-	public ResponseEntity<Object> AssignmentNotFoundException(AssignmentNotFoundException ex) {
+
+	@ExceptionHandler(CourseNotFoundException.class)
+	public ResponseEntity<Object> handleCourseNotFound(CourseNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
 		errorDetails.put("timestamp", LocalDateTime.now());
 		errorDetails.put("message", ex.getMessage());
 		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
-	
+
+	@ExceptionHandler(AssignmentNotFoundException.class)
+	public ResponseEntity<Object> handleAssignmentNotFound(AssignmentNotFoundException ex) {
+		Map<String, Object> errorDetails = new HashMap<>();
+		errorDetails.put("timestamp", LocalDateTime.now());
+		errorDetails.put("message", ex.getMessage());
+		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
 	@ExceptionHandler(SubmissionNotFoundException.class)
-	public ResponseEntity<Object> SubmissionNotFoundException(SubmissionNotFoundException ex) {
+	public ResponseEntity<Object> handleSubmissionNotFound(SubmissionNotFoundException ex) {
+		Map<String, Object> errorDetails = new HashMap<>();
+		errorDetails.put("timestamp", LocalDateTime.now());
+		errorDetails.put("message", ex.getMessage());
+		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(EnrollmentNotFoundException.class)
+	public ResponseEntity<Object> handleEnrollmentNotFound(EnrollmentNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
 		errorDetails.put("timestamp", LocalDateTime.now());
 		errorDetails.put("message", ex.getMessage());
@@ -45,6 +63,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<Object> handleUserExists(UserAlreadyExistsException ex) {
+		Map<String, Object> errorDetails = new HashMap<>();
+		errorDetails.put("timestamp", LocalDateTime.now());
+		errorDetails.put("message", ex.getMessage());
+		errorDetails.put("status", HttpStatus.CONFLICT.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(InstructorNotFoundException.class)
+	public ResponseEntity<Object> handleInstructorNotFound(InstructorNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
 		errorDetails.put("timestamp", LocalDateTime.now());
 		errorDetails.put("message", ex.getMessage());
