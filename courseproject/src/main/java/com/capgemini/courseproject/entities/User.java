@@ -21,11 +21,11 @@ public class User {
 
 	private String userType;
 
-    @OneToMany(mappedBy = "user")
-    private List<Enrollment> enrollments;
+	@OneToMany(mappedBy = "user")
+	private List<Enrollment> enrollments;
 
-    @OneToMany(mappedBy = "user")
-    private List<Submission> submissions;
+	@OneToMany(mappedBy = "user")
+	private List<Submission> submissions;
 
 	public User() {
 		super();
@@ -114,7 +114,5 @@ public class User {
 				+ ", phone=" + phone + ", userType=" + userType + ", enrollments=" + enrollments + ", submissions="
 				+ submissions + "]";
 	}
-	
-	
 
 }
