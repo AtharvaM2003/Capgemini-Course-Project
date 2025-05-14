@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.courseproject.entities.Enrollment;
-import com.capgemini.courseproject.exceptions.EnrollmentAlreadyExistsException;
+
 import com.capgemini.courseproject.repositories.EnrollmentRepository;
 
 @Service
@@ -23,9 +23,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	@Override
 	public Enrollment addEnrollment(Enrollment enrollment) {
 		
-		if(enrollmentRepository.exists(enrollment)) {
-			throw new EnrollmentAlreadyExistsException("Enrollment Already Exists");
-		}
 		return enrollmentRepository.save(enrollment);
 	}
 
