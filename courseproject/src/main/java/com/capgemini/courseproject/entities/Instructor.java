@@ -2,21 +2,27 @@ package com.capgemini.courseproject.entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "instructors")
 public class Instructor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long instructorId;
+	 @Column(name = "instructor_id")
+    private Long instructorId;
 
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	private String expertise;
+    @Column(name = "expertise")
+    private String expertise;
 
-	@OneToMany(mappedBy = "instructor")
-	private List<Course> courses;
-
+    @OneToMany(mappedBy = "instructor")
+    @JsonBackReference
+    private List<Course> courses;
 	public Instructor() {
 		super();
 	}

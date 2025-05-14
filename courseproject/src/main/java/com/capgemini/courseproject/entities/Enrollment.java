@@ -3,23 +3,30 @@ package com.capgemini.courseproject.entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long enrollmentId;
+	@Column(name = "enrollment_id")
+    private Long enrollmentId;
 
-	@ManyToOne
-	@JoinColumn(name = "userId")
-	private User user;
+    @Column(name = "enrollment_date")
+    private LocalDate enrollmentDate;
 
-	@ManyToOne
-	@JoinColumn(name = "courseId")
-	private Course course;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    private User user;
 
-	private LocalDate enrollmentDate;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    @JsonManagedReference
+    private Course course;
 
 	public Enrollment() {
 		super();

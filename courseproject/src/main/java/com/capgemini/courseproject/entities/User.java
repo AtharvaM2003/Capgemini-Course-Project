@@ -3,30 +3,41 @@ package com.capgemini.courseproject.entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "users")
 public class User {
-
+	 // userId, userName, email, password, phone, userType
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
+    @Column(name = "user_id")
+    private Long userId;
 
-	private String userName;
+	@Column(name = "user_name")
+    private String userName;
 
-	private String email;
+    @Column(name = "email")
+    private String email;
 
-	private String password;
+    @Column(name = "password")
+    private String password;
 
-	private String phone;
+    @Column(name = "phone")
+    private String phone;
 
-	private String userType;
+    @Column(name = "user_type")
+    private String userType;
 
-	@OneToMany(mappedBy = "user")
-	private List<Enrollment> enrollments;
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<Enrollment> enrollments;
 
-	@OneToMany(mappedBy = "user")
-	private List<Submission> submissions;
-
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Submission> submissions;
+    
 	public User() {
 		super();
 	}
