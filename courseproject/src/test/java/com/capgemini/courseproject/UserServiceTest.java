@@ -35,7 +35,7 @@ public class UserServiceTest {
         User savedUser = userService.createUser(user);
 
         assertNotNull(savedUser, "Saved user should not be null");
-        assertEquals("aarya", savedUser.getName());
+        assertEquals("aarya", savedUser.getUserName());
         assertEquals("aarya@gmail.com", savedUser.getEmail());
     }
 
@@ -49,7 +49,7 @@ public class UserServiceTest {
         User foundUser = userService.findUserById(1L);
 
         assertNotNull(foundUser);
-        assertEquals("aarya", foundUser.getName());
+        assertEquals("aarya", foundUser.getUserName());
         assertEquals("student", foundUser.getUserType());
     }
 }

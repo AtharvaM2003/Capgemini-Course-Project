@@ -38,7 +38,7 @@ public class UserControllerTest {
 
 		assertThat(response.getBody()).isNotNull();
 		assertThat(response.getBody().getUserId()).isEqualTo(userId);
-		assertThat(response.getBody().getName()).isEqualTo("Alice");
+		assertThat(response.getBody().getUserName()).isEqualTo("Alice");
 		assertThat(response.getBody().getEmail()).isEqualTo("alice@gmail.com");
 	}
 
@@ -53,6 +53,6 @@ public class UserControllerTest {
 
 		assertThat(response.getBody()).isNotNull();
 		assertThat(response.getBody().getUserId()).isEqualTo(2L);
-		assertThat(response.getBody().getName()).isEqualTo("Bob");
+		assertThat(response.getBody().getUserName()).isEqualTo("Bob");
 	}
 }
