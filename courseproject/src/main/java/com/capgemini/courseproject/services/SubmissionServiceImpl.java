@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.courseproject.entities.Submission;
+import com.capgemini.courseproject.exceptions.SubmissionNotFoundException;
 import com.capgemini.courseproject.repositories.SubmissionRepository;
 
 @Service
