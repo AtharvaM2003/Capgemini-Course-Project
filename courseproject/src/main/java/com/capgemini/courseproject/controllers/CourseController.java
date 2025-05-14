@@ -16,21 +16,21 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    // Create a course
+   
     @PostMapping
     public ResponseEntity<Course> addCourse(@RequestBody Course course) {
         Course savedCourse = courseService.addCourse(course);
         return ResponseEntity.ok(savedCourse);
     }
 
-    // Get all courses
+    
     @GetMapping
     public ResponseEntity<List<Course>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
         return ResponseEntity.ok(courses);
     }
 
-    // Get course by ID
+  
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
         Optional<Course> course = courseService.getCourseById(id);
@@ -38,7 +38,7 @@ public class CourseController {
                      .orElse(ResponseEntity.notFound().build());
     }
 
-    // Update course
+
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {
         Course course = courseService.updateCourse(id, updatedCourse);
@@ -48,7 +48,7 @@ public class CourseController {
         return ResponseEntity.notFound().build();
     }
 
-    // Delete course
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
