@@ -39,18 +39,15 @@ public class AssignmentController {
         return ResponseEntity.ok(assignmentService.createAssignment(assignment));
     }
 
-    /*@PutMapping("/{id}")
-    public ResponseEntity<Assignment> updateAssignment(
-            @PathVariable Long id,
-            @Valid @RequestBody Assignment assignment
-    ) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id,@RequestBody Assignment assignment) {
         return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment));
-    }*/
+    }
 
-    /*@DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {
         assignmentService.deleteAssignment(id);
         return ResponseEntity.noContent().build();
-    }*/
+    }
 }
 

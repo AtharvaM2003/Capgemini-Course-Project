@@ -24,7 +24,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         return assignmentRepository.save(assignment);
     }
 
-    /*@Override
+    @Override
     public Assignment updateAssignment(Long id, Assignment assignment) {
         Optional<Assignment> existingAssignment = assignmentRepository.findById(id);
         if (existingAssignment.isPresent()) {
@@ -36,15 +36,15 @@ public class AssignmentServiceImpl implements AssignmentService {
         } else {
             throw new RuntimeException("Assignment not found with ID: " + id);
         }
-    }*/
+    }
 
-    /*@Override
+    @Override
     public void deleteAssignment(Long id) {
         if (!assignmentRepository.existsById(id)) {
             throw new RuntimeException("Assignment not found with ID: " + id);
         }
         assignmentRepository.deleteById(id);
-    }*/
+    }
 
     @Override
     public Optional<Assignment> getAssignmentById(Long id) {
