@@ -24,9 +24,8 @@ public class Assignment {
 	private List<Submission> submissions;
 
 
-	public Assignment(Long assignmentId, Course course, String title, String description,
-			List<Submission> submissions) {
-		super();
+	public Assignment(Long assignmentId, Course course, String title, String description, List<Submission> submissions) {
+	
 		this.assignmentId = assignmentId;
 		this.course = course;
 		this.title = title;
