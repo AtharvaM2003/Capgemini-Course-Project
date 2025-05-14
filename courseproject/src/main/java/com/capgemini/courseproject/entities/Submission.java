@@ -5,19 +5,19 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-//@Table(name = "submissions")
+@Table(name = "submissions")
 public class Submission {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long submissionId;
 
-//	@ManyToOne
-//	@JoinColumn(name = "assignmenId")
+	@ManyToOne
+	@JoinColumn(name = "assignmenId")
 	private Assignment assignment;
 
-//	@ManyToOne
-//	@JoinColumn(name = "userId")
+	@ManyToOne
+	@JoinColumn(name = "userId")
 	private User user;
 
 	private LocalDate submissionDate;

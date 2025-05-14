@@ -21,11 +21,11 @@ public class User {
 
 	private String userType;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Enrollment> enrollments;
+	@OneToMany(mappedBy = "user")
+	private List<Enrollment> enrollments;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Submission> submissions;
+	@OneToMany(mappedBy = "user")
+	private List<Submission> submissions;
 
 	public User() {
 		super();
@@ -40,8 +40,8 @@ public class User {
 		this.password = password;
 		this.phone = phone;
 		this.userType = userType;
-//		this.enrollments = enrollments;
-//		this.submissions = submissions;
+		this.enrollments = enrollments;
+		this.submissions = submissions;
 	}
 
 	public Long getUserId() {
@@ -92,20 +92,20 @@ public class User {
 		this.userType = userType;
 	}
 
-//	public List<Enrollment> getEnrollments() {
-//		return enrollments;
-//	}
-//
-//	public void setEnrollments(List<Enrollment> enrollments) {
-//		this.enrollments = enrollments;
-//	}
-//
-//	public List<Submission> getSubmissions() {
-//		return submissions;
-//	}
-//
-//	public void setSubmissions(List<Submission> submissions) {
-//		this.submissions = submissions;
-//	}
+	public List<Enrollment> getEnrollments() {
+		return enrollments;
+	}
+
+	public void setEnrollments(List<Enrollment> enrollments) {
+		this.enrollments = enrollments;
+	}
+
+	public List<Submission> getSubmissions() {
+		return submissions;
+	}
+
+	public void setSubmissions(List<Submission> submissions) {
+		this.submissions = submissions;
+	}
 
 }
