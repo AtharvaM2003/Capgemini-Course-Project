@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.courseproject.entities.Submission;
-import com.capgemini.courseproject.entities.User;
+
 import com.capgemini.courseproject.services.SubmissionService;
-import com.capgemini.courseproject.services.UserService;
+
 
 @RestController
 @RequestMapping("/api/submissions")
