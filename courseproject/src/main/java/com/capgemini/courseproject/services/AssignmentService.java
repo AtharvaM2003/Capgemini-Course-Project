@@ -16,6 +16,6 @@ public interface AssignmentService {
     
     List<Assignment> getAllAssignments();
     
-    List<Assignment> getAssignmentsByCourseId(Long courseId);
+
 }
 

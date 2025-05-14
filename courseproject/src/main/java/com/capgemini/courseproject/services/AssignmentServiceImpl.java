@@ -56,9 +56,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         return assignmentRepository.findAll();
     }
 
-    @Override
-    public List<Assignment> getAssignmentsByCourseId(Long courseId) {
-        return assignmentRepository.findByCourseId(courseId);
-    }
+    
 }
 

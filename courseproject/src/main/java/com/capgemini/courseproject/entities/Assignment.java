@@ -9,7 +9,7 @@ public class Assignment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "assignment_id")
+	@Column(name = "assignmentId")
 	private Long assignmentId;
 
 	@ManyToOne

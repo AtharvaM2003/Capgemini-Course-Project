@@ -25,13 +25,23 @@ public class Course {
 
 	@OneToMany(mappedBy = "course")
 	private List<Assignment> assignments;
+	
+	private Double fees;
 
 	public Course() {
 		super();
 	}
 
+	
+	@Override
+	public String toString() {
+		return "Course [courseId=" + courseId + ", title=" + title + ", description=" + description + ", instructor="
+				+ instructor + ", enrollments=" + enrollments + ", assignments=" + assignments + ", fees=" + fees + "]";
+	}
+
+
 	public Course(Long courseId, String title, String description, Instructor instructor, List<Enrollment> enrollments,
-			List<Assignment> assignments) {
+			List<Assignment> assignments, Double fees) {
 		super();
 		this.courseId = courseId;
 		this.title = title;
@@ -39,7 +49,9 @@ public class Course {
 		this.instructor = instructor;
 		this.enrollments = enrollments;
 		this.assignments = assignments;
+		this.fees = fees;
 	}
+
 
 	public Long getCourseId() {
 		return courseId;
@@ -89,10 +101,13 @@ public class Course {
 		this.assignments = assignments;
 	}
 
-	@Override
-	public String toString() {
-		return "Course [courseId=" + courseId + ", title=" + title + ", description=" + description + ", instructor="
-				+ instructor + ", enrollments=" + enrollments + ", assignments=" + assignments + "]";
+	public Double getFees() {
+		return fees;
 	}
 
+	public void setFees(Double fees) {
+		this.fees = fees;
+	}
+
+	
 }

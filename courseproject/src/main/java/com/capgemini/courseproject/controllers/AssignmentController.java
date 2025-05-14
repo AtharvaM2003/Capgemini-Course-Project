@@ -32,10 +32,7 @@ public class AssignmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/course/{id}")
-    public ResponseEntity<List<Assignment>> getAssignmentsByCourseId(@PathVariable("id") Long courseId) {
-        return ResponseEntity.ok(assignmentService.getAssignmentsByCourseId(courseId));
-    }
+
 
     @PostMapping
     public ResponseEntity<Assignment> createAssignment(@Valid @RequestBody Assignment assignment) {
