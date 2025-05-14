@@ -13,11 +13,11 @@ public class Enrollment {
 
 	@ManyToOne
 	@JoinColumn(name = "userId")
-	private User user;
+	private Long userId;
 
 	@ManyToOne
 	@JoinColumn(name = "courseId")
-	private Course course;
+	private Long courseId;
 
 	private LocalDate enrollmentDate;
 
@@ -25,11 +25,11 @@ public class Enrollment {
 		super();
 	}
 
-	public Enrollment(Long enrollmentId, User user, Course course, LocalDate enrollmentDate) {
+	public Enrollment(Long enrollmentId, Long userId, Long courseId, LocalDate enrollmentDate) {
 		super();
 		this.enrollmentId = enrollmentId;
-		this.user = user;
-		this.course = course;
+		this.userId = userId;
+		this.courseId = courseId;
 		this.enrollmentDate = enrollmentDate;
 	}
 
@@ -41,20 +41,20 @@ public class Enrollment {
 		this.enrollmentId = enrollmentId;
 	}
 
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public Course getCourse() {
-		return course;
+	public Long getCourseId() {
+		return courseId;
 	}
 
-	public void setCourse(Course course) {
-		this.course = course;
+	public void setCourseId(Long courseId) {
+		this.courseId = courseId;
 	}
 
 	public LocalDate getEnrollmentDate() {
@@ -67,8 +67,10 @@ public class Enrollment {
 
 	@Override
 	public String toString() {
-		return "Enrollment [enrollmentId=" + enrollmentId + ", user=" + user + ", course=" + course
+		return "Enrollment [enrollmentId=" + enrollmentId + ", userId=" + userId + ", courseId=" + courseId
 				+ ", enrollmentDate=" + enrollmentDate + "]";
 	}
+
+
 
 }
