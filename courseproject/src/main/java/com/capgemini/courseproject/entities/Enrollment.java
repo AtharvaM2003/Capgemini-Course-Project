@@ -1,6 +1,9 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -15,16 +18,20 @@ public class Enrollment {
     private Long enrollmentId;
 
     @Column(name = "enrollment_date")
+    @PastOrPresent(message = "Date cannot be of future")
+    @NotNull(message = "Enrollment date required")
     private LocalDate enrollmentDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonManagedReference
+   
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
     @JsonManagedReference
+
     private Course course;
 
 	public Enrollment() {
