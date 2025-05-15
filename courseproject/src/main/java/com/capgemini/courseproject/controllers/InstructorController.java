@@ -64,8 +64,8 @@ public class InstructorController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @Valid @RequestBody Instructor instructor,
-			BindingResult result) {
+	public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @Valid @RequestBody Instructor instructor
+			,BindingResult result) {
 		if (result.hasErrors()) {
 			throw new IllegalArgumentException(result.getFieldErrors().toString());
 		}
