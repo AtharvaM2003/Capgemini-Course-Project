@@ -30,13 +30,13 @@ public class SubmissionServiceImpl implements SubmissionService {
 				.orElseThrow(() -> new SubmissionNotFoundException("Submission not found with ID: " + submissionId));
 	}
 
-	@Override
-	public boolean deleteSubmission(Long submissionId) {
-		if (repository.existsById(submissionId)) {
-			repository.deleteById(submissionId);
-			return true;
-		}
-		return false;
-	}
+//	@Override
+//	public boolean deleteSubmission(Long submissionId) {
+//		if (repository.existsById(submissionId)) {
+//			repository.deleteById(submissionId);
+//			return true;
+//		}
+//		return false;
+//	}
 
 }
