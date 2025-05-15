@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.courseproject.entities.Enrollment;
 import com.capgemini.courseproject.services.EnrollmentService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/api/enrollments")
 
 public class EnrollmentController {
@@ -31,8 +34,12 @@ public class EnrollmentController {
 
 	@PostMapping
 	public ResponseEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
+		
+		log.info("Request to Create a new enrollment");
 
 		Enrollment newEnroll = enrollmentService.addEnrollment(enrollment);
+		
+		log.debug("New Enrollment created with ID:{}",newEnroll);
 		return ResponseEntity.ok(newEnroll);
 
 	}
@@ -40,7 +47,10 @@ public class EnrollmentController {
 	@GetMapping
 	public ResponseEntity<List<Enrollment>> getAllEnrollments(){
 		
+		log.info("Request recieved to fetch all Enrollments");
 		List<Enrollment> allEnrollments = enrollmentService.getAllEnrollments();
+		
+		log.debug("Showing enrollments", allEnrollments.size());
 		return ResponseEntity.ok(allEnrollments);
 		
 		
@@ -49,8 +59,11 @@ public class EnrollmentController {
 	@GetMapping("/{enrollmentId}")
 	public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable Long enrollmentId){
 		
+		log.info("Request to get Enrollments by their ID");
+		
 		Optional<Enrollment> enrollment = enrollmentService.getEnrollmentById(enrollmentId);
 		
+		log.debug("Showing enrollments by their ID:{}", enrollment);
 		return enrollment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 		
 	}
