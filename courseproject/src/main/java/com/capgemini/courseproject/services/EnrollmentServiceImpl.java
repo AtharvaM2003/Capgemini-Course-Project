@@ -25,38 +25,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 	@Override
 	public Enrollment addEnrollment(Enrollment enrollment) {
-		
+
 		log.debug("Saving new Enrollment to Repository");
-		
+
 		return enrollmentRepository.save(enrollment);
 	}
-
-	/*
-	 * @Override public void deleteEnrollment(Long enrollmentId) {
-	 * if(!enrollmentRepository.existsById(enrollmentId)) { throw new
-	 * EnrollmentNotFoundException("Enrollment with Id"+enrollmentId+"Not Found");
-	 * 
-	 * } enrollmentRepository.deleteById(enrollmentId);
-	 * 
-	 * }
-	 */
-
-	/*
-	 * @Override public Enrollment updateEnrollment(Long enrollmentId, Enrollment
-	 * updatedEnrollment) {
-	 * 
-	 * Optional<Enrollment> exists = enrollmentRepository.findById(enrollmentId);
-	 * 
-	 * if(exists.isPresent()) {
-	 * 
-	 * Enrollment list = exists.get();
-	 * list.setCourseId(updatedEnrollment.getCourseId());
-	 * list.setUserId(enrollmentId);
-	 * 
-	 * }
-	 * 
-	 * return null; }
-	 */
 
 	@Override
 	public List<Enrollment> getAllEnrollments() {
@@ -72,8 +45,5 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		return enrollmentRepository.findById(enrollmentId);
 
 	}
-
-	
-
 
 }

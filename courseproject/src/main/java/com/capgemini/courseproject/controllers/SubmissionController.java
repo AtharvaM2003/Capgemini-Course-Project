@@ -19,14 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/submissions")
 @Slf4j
 public class SubmissionController {
-	
+
 	SubmissionService submissionService;
-	
+
 	@Autowired
 	public SubmissionController(SubmissionService submissionService) {
 		this.submissionService = submissionService;
 	}
-	
+
 	@GetMapping
 	public ResponseEntity<List<Submission>> getAllSubmissions() {
 		log.info("Request received to fetch all submissions");
@@ -35,7 +35,7 @@ public class SubmissionController {
 		return ResponseEntity.status(HttpStatus.OK).body(submissionList);
 
 	}
-	
+
 	@GetMapping("/{submissionId}")
 	public ResponseEntity<Submission> getSubmission(@PathVariable Long submissionId) {
 		log.info("Request received to fetch submission by ID", submissionId);
@@ -45,15 +45,5 @@ public class SubmissionController {
 		return ResponseEntity.status(HttpStatus.OK).body(submission);
 
 	}
-	
-
-
-//	@DeleteMapping("/{submissionId}")
-//	public ResponseEntity<Submission> deleteSubmission(@PathVariable Long submissionId) {
-//		submissionService.deleteSubmission(submissionId);
-//		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//	}
-	
-	
 
 }

@@ -1,13 +1,10 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "enrollments")
@@ -29,6 +26,7 @@ public class Enrollment {
 	@JoinColumn(name = "course_id")
 	@JsonBackReference(value = "course_enroll")
 	private Course course;
+
 	public Enrollment() {
 		super();
 	}

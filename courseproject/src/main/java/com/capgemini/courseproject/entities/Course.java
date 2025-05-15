@@ -17,18 +17,16 @@ public class Course {
 	@Column(name = "course_id")
 	private Long courseId;
 
-	@NotBlank(message="Title is required")
-//	@Size(min = 3, max = 100)
+	@NotBlank(message = "Title is required")
 	@Column(name = "title")
 	private String title;
 
-	@NotBlank(message="Description is required")
-//	@Size(min = 10, max = 500)
+	@NotBlank(message = "Description is required")
 	@Column(name = "description")
 	private String description;
 
 	@Positive
-	@NotNull(message="Fees is required")
+	@NotNull(message = "Fees is required")
 	@Column(name = "fees")
 	private double fees;
 

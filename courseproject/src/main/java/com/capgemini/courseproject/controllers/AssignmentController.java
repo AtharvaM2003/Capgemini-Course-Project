@@ -1,7 +1,6 @@
 package com.capgemini.courseproject.controllers;
 
 import com.capgemini.courseproject.entities.Assignment;
-import com.capgemini.courseproject.entities.User;
 import com.capgemini.courseproject.services.AssignmentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
