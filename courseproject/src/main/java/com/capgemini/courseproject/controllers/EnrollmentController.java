@@ -17,10 +17,17 @@ import com.capgemini.courseproject.services.EnrollmentService;
 
 @RestController
 @RequestMapping("/api/enrollments")
-public class EnrollmentController {
 
+public class EnrollmentController {
+	
+	private final EnrollmentService enrollmentService;
+	
 	@Autowired
-	EnrollmentService enrollmentService;
+	public EnrollmentController(EnrollmentService enrollmentService) {
+		
+		this.enrollmentService = enrollmentService;
+	}
+
 
 	@PostMapping
 	public ResponseEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
