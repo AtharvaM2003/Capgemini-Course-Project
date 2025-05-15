@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.courseproject.entities.User;
+import com.capgemini.courseproject.exceptions.EmailAlreadyExistsException;
 import com.capgemini.courseproject.exceptions.UserAlreadyExistsException;
 import com.capgemini.courseproject.exceptions.UserNotFoundException;
 import com.capgemini.courseproject.repositories.UserRepository;
@@ -21,10 +22,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User createUser(User user) {
-		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new UserAlreadyExistsException("User Already Exists ");
-		}
-		return userRepository.save(user);
+	    if (userRepository.existsByEmail(user.getEmail())) {
+	        throw new EmailAlreadyExistsException(user.getEmail());
+	    }
+
+	    if (userRepository.existsByUserName(user.getUserName())) {
+	        throw new UserAlreadyExistsException(user.getUserName());
+	    }
+
+	    return userRepository.save(user);
 	}
 
 	@Override
