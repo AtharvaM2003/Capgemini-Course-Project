@@ -12,23 +12,23 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @Column(name = "enrollment_id")
-	    private Long enrollmentId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "enrollment_id")
+	private Long enrollmentId;
 
-	    @Column(name = "enrollment_date")
-	    private LocalDate enrollmentDate;
+	@Column(name = "enrollment_date")
+	private LocalDate enrollmentDate;
 
-	    @ManyToOne
-	    @JoinColumn(name = "user_id")
-	    @JsonBackReference(value = "user_enroll")
-	    private User user;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	@JsonBackReference(value = "user_enroll")
+	private User user;
 
-	    @ManyToOne
-	    @JoinColumn(name = "course_id")
-	    @JsonBackReference(value = "course_enroll")
-	    private Course course;
+	@ManyToOne
+	@JoinColumn(name = "course_id")
+	@JsonBackReference(value = "course_enroll")
+	private Course course;
 	public Enrollment() {
 		super();
 	}
