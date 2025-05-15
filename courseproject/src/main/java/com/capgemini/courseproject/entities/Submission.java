@@ -1,12 +1,17 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "submissions")
+
 public class Submission {
 
 	@Id
@@ -14,21 +19,9 @@ public class Submission {
 	@Column(name = "submission_id")
 	private Long submissionId;
 
-	@Column(name = "submission_date")
-	private LocalDate submissionDate;
-
 	@Column(name = "status")
 	private boolean status;
 
-	@ManyToOne
-	@JoinColumn(name = "assignment_id")
-	@JsonBackReference(value = "assignment_submission")
-	private Assignment assignment;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	@JsonBackReference(value = "user_submission")
-	private User user;
 
 	public Submission() {
 		super();
