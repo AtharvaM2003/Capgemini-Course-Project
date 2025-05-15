@@ -9,10 +9,13 @@ import com.capgemini.courseproject.entities.Submission;
 public interface SubmissionService {
 	
 	List<Submission> findAllsubmissions();
-	
 	Submission findSubmissionById(Long submissionId);
-	
+	List<Submission> findSubmissionsByUserId(Long userId);
+    List<Submission> findSubmissionsByAssignmentId(Long assignmentId);
+    
 //	boolean deleteSubmission(Long submissionId);
+	
+	
 	
 
 }

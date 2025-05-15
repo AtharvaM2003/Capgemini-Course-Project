@@ -8,9 +8,11 @@ import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "submissions")
+
 public class Submission {
 
 	@Id
@@ -28,12 +30,12 @@ public class Submission {
 
     @ManyToOne
     @JoinColumn(name = "assignment_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("submissions")
     private Assignment assignment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("submissions")
     private User user;
 
 	public Submission() {
