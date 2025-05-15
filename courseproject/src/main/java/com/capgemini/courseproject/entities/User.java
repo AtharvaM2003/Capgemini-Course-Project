@@ -81,7 +81,7 @@ public class User {
 		return userName;
 	}
 
-	public void setName(String userName) {
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
