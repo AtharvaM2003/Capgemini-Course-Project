@@ -87,7 +87,7 @@ public class UserControllerTest {
 
 		when(userService.updateUser(eq(id), any(User.class))).thenReturn(updated);
 
-		ResponseEntity<User> response = userController.updateUser(id, updated);
+		ResponseEntity<User> response = userController.updateUser(id, updated, bindingResult);
 
 		assertThat(response.getBody()).isNotNull();
 		assertThat(response.getBody().getUserId()).isEqualTo(id);

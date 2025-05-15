@@ -56,8 +56,13 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User newUser) {
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User newUser,
+			BindingResult result) {
 		log.info("PUT /api/users/{} - Request received to update user: {}", id, newUser);
+		if (result.hasErrors()) {
+			log.error("Validation failed for user creation: {}", result.getAllErrors());
+			throw new IllegalArgumentException("Invalid User Data");
+		}
 		User updatedUser = userService.updateUser(id, newUser);
 		log.debug("User with ID {} updated: {}", id, updatedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
