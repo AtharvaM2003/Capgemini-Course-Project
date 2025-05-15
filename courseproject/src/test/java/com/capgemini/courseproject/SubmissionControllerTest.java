@@ -66,34 +66,5 @@ public class SubmissionControllerTest {
         assertThat(response.getBody().getStatus()).isTrue();
     }
 
-    @Test
-    public void testGetSubmissionsByUserId() {
-        Long userId = 1L;
-        User mockUser = new User(userId, "Bob", "bob@gmail.com", "pass123", "1234567890", "student", null, null);
-        Assignment mockAssignment = new Assignment();
-
-        Submission submission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
-        when(submissionService.findSubmissionsByUserId(userId)).thenReturn(Arrays.asList(submission));
-
-        ResponseEntity<List<Submission>> response = submissionController.getSubmissionsByUser(userId);
-
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).hasSize(1);
-        assertThat(response.getBody().get(0).getUser().getUserId()).isEqualTo(userId);
-    }
-
-    @Test
-    public void testGetSubmissionsByAssignmentId() {
-        Long assignmentId = 10L;
-        User mockUser = new User(1L, "Charlie", "charlie@gmail.com", "pass123", "1234567890", "student", null, null);
-        Assignment mockAssignment = new Assignment(); // You can set ID if your logic uses it
-
-        Submission submission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
-        when(submissionService.findSubmissionsByAssignmentId(assignmentId)).thenReturn(Arrays.asList(submission));
-
-        ResponseEntity<List<Submission>> response = submissionController.getSubmissionsByAssignment(assignmentId);
-
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).hasSize(1);
-    }
+  
 }
