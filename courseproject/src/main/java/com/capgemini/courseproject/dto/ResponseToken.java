@@ -1,4 +1,4 @@
-package com.capgemini.courseproject.Dto;
+package com.capgemini.courseproject.dto;
 
 public class ResponseToken {
 	String token;

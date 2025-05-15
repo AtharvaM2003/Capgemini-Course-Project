@@ -17,5 +17,5 @@ public interface CourseService {
     
     Optional<Course> getCourseById(Long courseId);
     
-    List<Assignment> findByCourse_CourseId(Long courseId);
+    List<Assignment> findByCourseCourseId(Long courseId);
 }

@@ -46,8 +46,7 @@ public class CourseServiceImple implements CourseService {
 			existingCourse.setTitle(updatedCourse.getTitle());
 			existingCourse.setDescription(updatedCourse.getDescription());
 			existingCourse.setInstructor(updatedCourse.getInstructor());
-			// Note: You may or may not want to update enrollments/assignments directly
-			// here.
+
 			log.debug("Course updated successfully: {}", existingCourse);
 			return courseRepository.save(existingCourse);
 		}
@@ -77,7 +76,7 @@ public class CourseServiceImple implements CourseService {
 	}
 
 	@Override
-	public List<Assignment> findByCourse_CourseId(Long courseId) {
+	public  List<Assignment> findByCourseCourseId(Long courseId) {
 		return assignmentRepository.findByCourse_CourseId(courseId);
 	}
 }

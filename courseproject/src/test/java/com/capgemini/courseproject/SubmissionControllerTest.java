@@ -20,51 +20,50 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-public class SubmissionControllerTest {
+class SubmissionControllerTest {
 
-    @Mock
-    private SubmissionService submissionService;
+	@Mock
+	private SubmissionService submissionService;
 
-    @InjectMocks
-    private SubmissionController submissionController;
+	@InjectMocks
+	private SubmissionController submissionController;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    public void testGetAllSubmissions() {
-        User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
-        Assignment mockAssignment = new Assignment();
+	@Test
+	void testGetAllSubmissions() {
+		User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+		Assignment mockAssignment = new Assignment();
 
-        Submission submission1 = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
-        Submission submission2 = new Submission(2L, mockAssignment, mockUser, LocalDate.now().minusDays(1), false);
+		Submission submission1 = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
+		Submission submission2 = new Submission(2L, mockAssignment, mockUser, LocalDate.now().minusDays(1), false);
 
-        when(submissionService.findAllsubmissions()).thenReturn(Arrays.asList(submission1, submission2));
+		when(submissionService.findAllsubmissions()).thenReturn(Arrays.asList(submission1, submission2));
 
-        ResponseEntity<List<Submission>> response = submissionController.getAllSubmissions();
+		ResponseEntity<List<Submission>> response = submissionController.getAllSubmissions();
 
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).hasSize(2);
-        assertThat(response.getBody().get(0).getSubmissionId()).isEqualTo(1L);
-        assertThat(response.getBody().get(1).getStatus()).isFalse();
-    }
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody()).hasSize(2);
+		assertThat(response.getBody().get(0).getSubmissionId()).isEqualTo(1L);
+		assertThat(response.getBody().get(1).getStatus()).isFalse();
+	}
 
-    @Test
-    public void testGetSubmissionById() {
-        User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
-        Assignment mockAssignment = new Assignment();
-        Submission mockSubmission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
+	@Test
+	void testGetSubmissionById() {
+		User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+		Assignment mockAssignment = new Assignment();
+		Submission mockSubmission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
 
-        when(submissionService.findSubmissionById(1L)).thenReturn(mockSubmission);
+		when(submissionService.findSubmissionById(1L)).thenReturn(mockSubmission);
 
-        ResponseEntity<Submission> response = submissionController.getSubmission(1L);
+		ResponseEntity<Submission> response = submissionController.getSubmission(1L);
 
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getSubmissionId()).isEqualTo(1L);
-        assertThat(response.getBody().getStatus()).isTrue();
-    }
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().getSubmissionId()).isEqualTo(1L);
+		assertThat(response.getBody().getStatus()).isTrue();
+	}
 
-  
 }

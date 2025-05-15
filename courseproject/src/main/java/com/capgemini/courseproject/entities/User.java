@@ -35,7 +35,7 @@ public class User {
 	private String password;
 
 	@NotBlank(message = "Phone number is mandatory")
-	@Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
+	@Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
 	@Column(name = "phone")
 	private String phone;
 

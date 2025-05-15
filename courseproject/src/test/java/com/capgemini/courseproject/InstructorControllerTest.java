@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class InstructorControllerTest {
+class InstructorControllerTest {
 
 	@Mock
 	private InstructorService instructorService;
@@ -24,12 +24,12 @@ public class InstructorControllerTest {
 	private InstructorController instructorController;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 
 	@Test
-	public void testFindInstructorById() {
+	void testFindInstructorById() {
 
 		Long instructorId = 1L;
 		Instructor mockInstructor = new Instructor();
@@ -46,7 +46,7 @@ public class InstructorControllerTest {
 	}
 
 	@Test
-	public void testDeleteInstructorById() {
+	void testDeleteInstructorById() {
 
 		Long instructorId = 1L;
 

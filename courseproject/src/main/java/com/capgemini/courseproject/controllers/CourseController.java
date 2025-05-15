@@ -85,7 +85,7 @@ public class CourseController {
 	@GetMapping("/{id}/assignments")
 	public ResponseEntity<List<Assignment>> getAssignmentsByCourseId(@PathVariable Long id) {
 		log.info("GET /api/courses/{}/assignments - Fetching assignments for course", id);
-		List<Assignment> assignments = courseService.findByCourse_CourseId(id);
+		List<Assignment> assignments = courseService.findByCourseCourseId(id);
 		if (assignments.isEmpty()) {
 			log.warn("No assignments found for course ID {}", id);
 			return ResponseEntity.notFound().build();

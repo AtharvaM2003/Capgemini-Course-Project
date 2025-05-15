@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.capgemini.courseproject.Dto.LoginDto;
-import com.capgemini.courseproject.Dto.ResponseToken;
+import com.capgemini.courseproject.dto.LoginDto;
+import com.capgemini.courseproject.dto.ResponseToken;
 import com.capgemini.courseproject.entities.User;
 import com.capgemini.courseproject.exceptions.UserAlreadyExistsException;
 import com.capgemini.courseproject.security.JwtUtils;
