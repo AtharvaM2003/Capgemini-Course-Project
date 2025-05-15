@@ -40,7 +40,7 @@ public class AssignmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id,@RequestBody Assignment assignment) {
+    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id,@Valid @RequestBody Assignment assignment) {
         return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment));
     }
 

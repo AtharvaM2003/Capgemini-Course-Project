@@ -1,6 +1,10 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -14,10 +18,14 @@ public class Assignment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "assignment_id")
     private Long assignmentId;
-
+	
+	@NotBlank(message = "Title is required")
+	@Size(min = 2, max = 100, message = "Title must be between 2 and 100 characters")
     @Column(name = "title")
     private String title;
 
+	@NotBlank(message="Description is required")
+	@Size(min = 3, max = 500, message = "Description must be between 3 and 500 characters")
     @Column(name = "description")
     private String description;
 
@@ -41,7 +49,7 @@ public class Assignment {
 	}
 
 	public Assignment() {
-		super();
+		
 	}
 
 	public Long getAssignmentId() {
