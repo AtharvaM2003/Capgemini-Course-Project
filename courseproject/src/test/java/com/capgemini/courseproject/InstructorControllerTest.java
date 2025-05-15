@@ -12,37 +12,47 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class InstructorControllerTest {
 
-    @Mock
-    private InstructorService instructorService;
+	@Mock
+	private InstructorService instructorService;
 
-    @InjectMocks
-    private InstructorController instructorController;
+	@InjectMocks
+	private InstructorController instructorController;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this); 
-    }
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    public void testFindInstructorById() {
-       
-        Long instructorId = 1L;
-        Instructor mockInstructor = new Instructor();
-        mockInstructor.setInstructorId(instructorId);
-        mockInstructor.setName("Ram");
+	@Test
+	public void testFindInstructorById() {
 
-        when(instructorService.findInstructorById(instructorId)).thenReturn(mockInstructor);
+		Long instructorId = 1L;
+		Instructor mockInstructor = new Instructor();
+		mockInstructor.setInstructorId(instructorId);
+		mockInstructor.setName("Ram");
 
-        
-        ResponseEntity<Instructor> response = instructorController.findInstructorById(instructorId);
+		when(instructorService.findInstructorById(instructorId)).thenReturn(mockInstructor);
 
-        
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getInstructorId()).isEqualTo(instructorId);
-        assertThat(response.getBody().getName()).isEqualTo("Ram");
-    }
+		ResponseEntity<Instructor> response = instructorController.findInstructorById(instructorId);
+
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().getInstructorId()).isEqualTo(instructorId);
+		assertThat(response.getBody().getName()).isEqualTo("Ram");
+	}
+
+	@Test
+	public void testDeleteInstructorById() {
+
+		Long instructorId = 1L;
+
+		ResponseEntity<Instructor> response = instructorController.deleteInstructor(instructorId);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+	}
+
 }

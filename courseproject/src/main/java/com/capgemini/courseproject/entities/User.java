@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -14,43 +15,42 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "users")
 public class User {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Long userId;
 
-	@NotBlank(message = "Username is mandatory")
-	@Size(min = 2, max = 50, message = "Username must be between 2 and 50 characters")
+	@NotBlank
+	@Size(min = 2, max = 50)
 	@Column(name = "user_name")
 	private String userName;
 
-	@NotBlank(message = "Email is mandatory")
-	@Email(message = "Invalid email format")
+	@NotBlank
+	@Email
 	@Column(name = "email", unique = true)
 	private String email;
 
-	@NotBlank(message = "Password is mandatory")
-	@Size(min = 6, message = "Password must be at least 6 characters long")
+	@NotBlank
+	@Size(min = 6)
 	@Column(name = "password")
 	private String password;
 
-	@NotBlank(message = "Phone number is mandatory")
-	@Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
+	@NotBlank
+	@Pattern(regexp = "^[0-9]{10}$")
 	@Column(name = "phone")
 	private String phone;
 
-	@NotBlank(message = "User type is mandatory")
+	@NotBlank
 	@Column(name = "user_type")
 	private String userType;
 
-	@OneToMany(mappedBy = "user")
-	@JsonBackReference
-	private List<Enrollment> enrollments;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "user_enroll")
+	private List<Enrollment> enrollments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user")
-	@JsonManagedReference
-	private List<Submission> submissions;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "user_submission")
+	private List<Submission> submissions = new ArrayList<>();
 
 	public User() {
 		super();

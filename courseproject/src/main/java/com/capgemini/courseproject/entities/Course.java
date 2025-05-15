@@ -2,6 +2,8 @@ package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -10,56 +12,55 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "courses")
 public class Course {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "course_id")
+	private Long courseId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_id")
-    private Long courseId;
+	@NotBlank
+	@Size(min = 3, max = 100)
+	@Column(name = "title")
+	private String title;
 
-    @NotBlank(message = "Title is required")
-    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
-    @Column(name = "title")
-    private String title;
+	@NotBlank
+	@Size(min = 10, max = 500)
+	@Column(name = "description")
+	private String description;
 
-    @NotBlank(message = "Description is required")
-    @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters")
-    @Column(name = "description")
-    private String description;
+	@Positive
+	@Column(name = "fees")
+	private double fees;
 
-    @Positive(message = "Fees must be positive")
-    @Column(name = "fees")
-    private double fees;
+	@ManyToOne
+	@JoinColumn(name = "instructor_id")
+	@JsonBackReference(value = "instructor_course")
+	private Instructor instructor;
 
-    @ManyToOne
-    @JoinColumn(name = "instructor_id")
-    @JsonManagedReference 
-    private Instructor instructor;
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "course_enroll")
+	private List<Enrollment> enrollments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
-    @JsonBackReference 
-    private List<Enrollment> enrollments;
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "course_assignment")
+	private List<Assignment> assignments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
-    @JsonManagedReference
-    private List<Assignment> assignments;
+	public Course() {
+		super();
+	}
 
-    public Course() {
-        super();
-    }
+	public Course(Long courseId, String title, String description, Instructor instructor, List<Enrollment> enrollments,
+			List<Assignment> assignments, Double fees) {
+		super();
+		this.courseId = courseId;
+		this.title = title;
+		this.description = description;
+		this.instructor = instructor;
+		this.enrollments = enrollments;
+		this.assignments = assignments;
+		this.fees = fees;
+	}
 
-    public Course(Long courseId, String title, String description, Instructor instructor,
-                  List<Enrollment> enrollments, List<Assignment> assignments, Double fees) {
-        super();
-        this.courseId = courseId;
-        this.title = title;
-        this.description = description;
-        this.instructor = instructor;
-        this.enrollments = enrollments;
-        this.assignments = assignments;
-        this.fees = fees;
-    }
-
-    public Long getCourseId() {
+	public Long getCourseId() {
 		return courseId;
 	}
 
@@ -116,8 +117,8 @@ public class Course {
 	}
 
 	@Override
-    public String toString() {
-        return "Course [courseId=" + courseId + ", title=" + title + ", description=" + description + ", instructor="
-                + instructor + ", enrollments=" + enrollments + ", assignments=" + assignments + ", fees=" + fees + "]";
-    }
+	public String toString() {
+		return "Course [courseId=" + courseId + ", title=" + title + ", description=" + description + ", instructor="
+				+ instructor + ", enrollments=" + enrollments + ", assignments=" + assignments + ", fees=" + fees + "]";
+	}
 }

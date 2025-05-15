@@ -1,32 +1,34 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "enrollment_id")
-    private Long enrollmentId;
+	private Long enrollmentId;
 
-    @Column(name = "enrollment_date")
-    private LocalDate enrollmentDate;
+	@Column(name = "enrollment_date")
+	private LocalDate enrollmentDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonManagedReference
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	@JsonBackReference(value = "user_enroll")
+	private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    @JsonManagedReference
-    private Course course;
-
+	@ManyToOne
+	@JoinColumn(name = "course_id")
+	@JsonBackReference(value = "course_enroll")
+	private Course course;
 	public Enrollment() {
 		super();
 	}
@@ -76,10 +78,5 @@ public class Enrollment {
 		return "Enrollment [enrollmentId=" + enrollmentId + ", user=" + user + ", course=" + course
 				+ ", enrollmentDate=" + enrollmentDate + "]";
 	}
-
-	
-
-
-
 
 }

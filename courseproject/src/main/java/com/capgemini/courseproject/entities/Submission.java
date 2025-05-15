@@ -1,6 +1,5 @@
 package com.capgemini.courseproject.entities;
 
-
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -12,24 +11,24 @@ public class Submission {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name = "submission_id")
-    private Long submissionId;
+	@Column(name = "submission_id")
+	private Long submissionId;
 
-    @Column(name = "submission_date")
-    private LocalDate submissionDate;
+	@Column(name = "submission_date")
+	private LocalDate submissionDate;
 
-    @Column(name = "status")
-    private boolean status;
+	@Column(name = "status")
+	private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "assignment_id")
-    @JsonBackReference
-    private Assignment assignment;
+	@ManyToOne
+	@JoinColumn(name = "assignment_id")
+	@JsonBackReference(value = "assignment_submission")
+	private Assignment assignment;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	@JsonBackReference(value = "user_submission")
+	private User user;
 
 	public Submission() {
 		super();
