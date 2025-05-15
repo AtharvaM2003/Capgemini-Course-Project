@@ -41,11 +41,11 @@ public class SubmissionController {
 
 	}
 	
-	@DeleteMapping("/{submissionId}")
-	public ResponseEntity<Submission> deleteSubmission(@PathVariable Long submissionId) {
-		submissionService.deleteSubmission(submissionId);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
+//	@DeleteMapping("/{submissionId}")
+//	public ResponseEntity<Submission> deleteSubmission(@PathVariable Long submissionId) {
+//		submissionService.deleteSubmission(submissionId);
+//		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//	}
 	
 	
 

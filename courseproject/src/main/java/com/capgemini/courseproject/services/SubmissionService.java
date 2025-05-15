@@ -12,7 +12,7 @@ public interface SubmissionService {
 	
 	Submission findSubmissionById(Long submissionId);
 	
-	boolean deleteSubmission(Long submissionId);
+//	boolean deleteSubmission(Long submissionId);
 	
 
 }
