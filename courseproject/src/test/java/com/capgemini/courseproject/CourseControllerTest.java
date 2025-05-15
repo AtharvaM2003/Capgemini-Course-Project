@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,9 @@ private CourseService courseService;
 @InjectMocks
 private CourseController courseController;
 
+@InjectMocks
+private BindingResult bindingResult;
+
 @BeforeEach
 public void setUp() {
     MockitoAnnotations.openMocks(this);
@@ -38,7 +42,7 @@ public void testCreateCourse() {
 
     when(courseService.addCourse(any(Course.class))).thenReturn(savedCourse);
 
-    ResponseEntity<Course> response = courseController.addCourse(inputCourse);
+    ResponseEntity<Course> response = courseController.addCourse(inputCourse, bindingResult);
 
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().getCourseId()).isEqualTo(1L);
@@ -76,7 +80,7 @@ public void testUpdateCourse() {
     Course updated = new Course(1L, "Advanced Java", "Updated course", null, null, null, 0.0);
     when(courseService.updateCourse(eq(1L), any(Course.class))).thenReturn(updated);
 
-    ResponseEntity<Course> response = courseController.updateCourse(1L, updated);
+    ResponseEntity<Course> response = courseController.updateCourse(1L, updated, bindingResult);
 
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().getTitle()).isEqualTo("Advanced Java");
