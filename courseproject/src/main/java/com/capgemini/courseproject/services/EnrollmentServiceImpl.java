@@ -10,7 +10,10 @@ import com.capgemini.courseproject.entities.Enrollment;
 
 import com.capgemini.courseproject.repositories.EnrollmentRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class EnrollmentServiceImpl implements EnrollmentService {
 
 	EnrollmentRepository enrollmentRepository;
@@ -22,6 +25,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 	@Override
 	public Enrollment addEnrollment(Enrollment enrollment) {
+		
+		log.debug("Saving new Enrollment to Repository");
 		
 		return enrollmentRepository.save(enrollment);
 	}
@@ -55,6 +60,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 	@Override
 	public List<Enrollment> getAllEnrollments() {
+		log.debug("Fetching all enrollments");
 
 		return enrollmentRepository.findAll();
 	}
@@ -62,7 +68,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	@Override
 	public Optional<Enrollment> getEnrollmentById(Long enrollmentId) {
 
+		log.debug("Fetching enrollments by ID:{}", enrollmentId);
 		return enrollmentRepository.findById(enrollmentId);
+
 	}
 
 	
