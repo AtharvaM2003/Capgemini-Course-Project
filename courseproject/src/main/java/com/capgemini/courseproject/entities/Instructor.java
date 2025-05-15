@@ -1,28 +1,31 @@
 package com.capgemini.courseproject.entities;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "instructors")
 public class Instructor {
-
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name = "instructor_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "instructor_id")
     private Long instructorId;
 
+    @NotBlank
     @Column(name = "name")
     private String name;
 
+    @NotBlank
     @Column(name = "expertise")
     private String expertise;
 
-    @OneToMany(mappedBy = "instructor")
-    @JsonBackReference
-    private List<Course> courses;
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "instructor_course")
+    private List<Course> courses = new ArrayList<>();
 	public Instructor() {
 		super();
 	}

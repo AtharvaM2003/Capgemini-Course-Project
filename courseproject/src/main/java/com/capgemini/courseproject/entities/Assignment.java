@@ -1,6 +1,9 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -9,30 +12,31 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "assignments")
 public class Assignment {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "assignment_id")
-    private Long assignmentId;
+	private Long assignmentId;
 
-    @Column(name = "title")
-    private String title;
+	@NotBlank
+	@Column(name = "title")
+	private String title;
 
-    @Column(name = "description")
-    private String description;
+	@NotBlank
+	@Column(name = "description")
+	private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    @JsonBackReference
-    private Course course;
+	@ManyToOne
+	@JoinColumn(name = "course_id")
+	@JsonBackReference(value = "course_assignment")
+	private Course course;
 
-    @OneToMany(mappedBy = "assignment")
-    @JsonManagedReference
-    private List<Submission> submissions;
+	@OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "assignment_submission")
+	private List<Submission> submissions = new ArrayList<>();
 
+	public Assignment(Long assignmentId, Course course, String title, String description,
+			List<Submission> submissions) {
 
-	public Assignment(Long assignmentId, Course course, String title, String description, List<Submission> submissions) {
-	
 		this.assignmentId = assignmentId;
 		this.course = course;
 		this.title = title;
