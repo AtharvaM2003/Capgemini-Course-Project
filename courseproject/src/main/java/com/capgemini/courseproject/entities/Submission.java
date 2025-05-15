@@ -1,6 +1,5 @@
 package com.capgemini.courseproject.entities;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -17,26 +16,12 @@ public class Submission {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name = "submission_id")
-    private Long submissionId;
+	@Column(name = "submission_id")
+	private Long submissionId;
 
-    @Column(name = "submission_date")
-    @NotNull(message = "Submission date is required")
-    @PastOrPresent(message = "Submission date cannot be in the future")
-    private LocalDate submissionDate;
+	@Column(name = "status")
+	private boolean status;
 
-    @Column(name = "status")
-    private boolean status;
-
-    @ManyToOne
-    @JoinColumn(name = "assignment_id")
-    @JsonIgnoreProperties("submissions")
-    private Assignment assignment;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties("submissions")
-    private User user;
 
 	public Submission() {
 		super();
