@@ -2,7 +2,10 @@ package com.capgemini.courseproject.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+
 import java.util.ArrayList;
+
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -10,22 +13,22 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "instructors")
 public class Instructor {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "instructor_id")
-    private Long instructorId;
+	  @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    @Column(name = "instructor_id")
+	    private Long instructorId;
 
-    @NotBlank
-    @Column(name = "name")
-    private String name;
+	    @NotBlank
+	    @Column(name = "name")
+	    private String name;
 
-    @NotBlank
-    @Column(name = "expertise")
-    private String expertise;
+	    @NotBlank
+	    @Column(name = "expertise")
+	    private String expertise;
 
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "instructor_course")
-    private List<Course> courses = new ArrayList<>();
+	    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+	    @JsonManagedReference(value = "instructor_course")
+	    private List<Course> courses = new ArrayList<>();
 	public Instructor() {
 		super();
 	}

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.courseproject.entities.Instructor;
 import com.capgemini.courseproject.services.InstructorService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/instructors")
 public class InstructorController {
@@ -37,18 +39,18 @@ public class InstructorController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Instructor> findInstructorById(@PathVariable Long id) {
-		Instructor Intructor = instructorService.findInstructorById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(Intructor);
+		Instructor intructor = instructorService.findInstructorById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(intructor);
 	}
 
 	@PostMapping
-	public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
+	public ResponseEntity<Instructor> createInstructor(@Valid @RequestBody Instructor instructor) {
 		Instructor save = instructorService.createInstructor(instructor);
 		return ResponseEntity.status(HttpStatus.CREATED).body(save);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor instructor) {
+	public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id,@Valid @RequestBody Instructor instructor) {
 		Instructor newIntructor = instructorService.updateInstructor(instructor, id);
 		return ResponseEntity.status(HttpStatus.OK).body(newIntructor);
 	}
