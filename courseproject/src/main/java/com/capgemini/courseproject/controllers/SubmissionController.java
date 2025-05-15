@@ -46,21 +46,7 @@ public class SubmissionController {
 
 	}
 	
-	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<Submission>> getSubmissionsByUser(@PathVariable Long userId) {
-		log.info("Request received to fetch submission by user ID", userId);
-	    List<Submission> submissions = submissionService.findSubmissionsByUserId(userId);
-	    log.debug("Fetched Submission by userId: {}", submissions.size(), userId);
-	    return ResponseEntity.ok(submissions);
-	}
-	
-	@GetMapping("/assignment/{assignmentId}")
-	public ResponseEntity<List<Submission>> getSubmissionsByAssignment(@PathVariable Long assignmentId) {
-		log.info("Request received to fetch submission by assignment ID", assignmentId);
-	    List<Submission> submissions = submissionService.findSubmissionsByAssignmentId(assignmentId);
-	    log.debug("Fetched Submission by assignmentId: {}", submissions.size(), assignmentId);
-	    return ResponseEntity.ok(submissions);
-	}
+
 
 //	@DeleteMapping("/{submissionId}")
 //	public ResponseEntity<Submission> deleteSubmission(@PathVariable Long submissionId) {

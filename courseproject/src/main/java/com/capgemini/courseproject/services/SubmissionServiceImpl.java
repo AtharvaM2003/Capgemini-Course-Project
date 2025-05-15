@@ -36,26 +36,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 				});
 	}
 	
-	@Override
-	public List<Submission> findSubmissionsByUserId(Long userId) {
-		log.debug("Fetching submissions for user ID: {}", userId);
-		List<Submission> submissions = repository.findByUserUserId(userId);
-		if (submissions.isEmpty()) {
-			log.warn("No submissions found for user ID: {}", userId);
-		}
-		return submissions;
-	}
 
-
-	@Override
-	public List<Submission> findSubmissionsByAssignmentId(Long assignmentId) {
-	    log.debug("Fetching submissions for assignment ID: {}", assignmentId);
-	    List<Submission> submissions = repository.findByAssignmentId(assignmentId);
-	    if (submissions.isEmpty()) {
-	        log.warn("No submissions found for assignment ID: {}", assignmentId);
-	    }
-	    return submissions;
-	}
 
 
 //	@Override

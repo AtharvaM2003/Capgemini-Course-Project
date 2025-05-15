@@ -5,7 +5,5 @@ import java.util.*;
 import com.capgemini.courseproject.entities.Submission;
 
 public interface SubmissionRepository extends JpaRepository<Submission, Long>{
-		
-	List<Submission> findByUserUserId(Long userId);
-    List<Submission> findByAssignmentId(Long assignmentId);
+	
 }
