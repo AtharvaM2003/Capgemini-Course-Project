@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
-public class UserControllerTest {
+class UserControllerTest {
 
 	@Mock
 	private UserService userService;
@@ -31,12 +31,12 @@ public class UserControllerTest {
 	private UserController userController;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 
 	@Test
-	public void testGetUserById() {
+	void testGetUserById() {
 		Long userId = 1L;
 		User mockUser = new User(userId, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
 
@@ -51,7 +51,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testCreateUser() {
+	void testCreateUser() {
 		User inputUser = new User(null, "Bob", "bob@gmail.com", "pass456", "9876500000", "student", null, null);
 		User savedUser = new User(2L, "Bob", "bob@gmail.com", "pass456", "9876500000", "student", null, null);
 
@@ -66,7 +66,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testGetAllUsers() {
+	void testGetAllUsers() {
 		User u1 = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
 		User u2 = new User(2L, "Bob", "bob@gmail.com", "pass456", "9876500000", "student", null, null);
 
@@ -81,7 +81,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testUpdateUser() {
+	void testUpdateUser() {
 		Long id = 1L;
 		User updated = new User(id, "Updated", "updated@gmail.com", "pass", "9999999999", "student", null, null);
 
@@ -95,16 +95,15 @@ public class UserControllerTest {
 	}
 
 	@Test
-	public void testDeleteUser() {
-	    Long userId = 1L;
+	void testDeleteUser() {
+		Long userId = 1L;
 
-	    when(userService.deleteUser(userId)).thenReturn(true);
+		when(userService.deleteUser(userId)).thenReturn(true);
 
-	    ResponseEntity<Void> response = userController.deleteUser(userId);
+		ResponseEntity<Void> response = userController.deleteUser(userId);
 
-	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-	    assertThat(response.getBody()).isNull();
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(response.getBody()).isNull();
 	}
-
 
 }

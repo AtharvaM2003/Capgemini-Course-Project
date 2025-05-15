@@ -16,21 +16,25 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+	private static final String TIMESTAMP = "timestamp";
+	private static final String MESSAGE = "message";
+	private static final String STATUS = "status";
+
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<Object> handleUserExists(UserAlreadyExistsException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.CONFLICT.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.CONFLICT.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
 	}
 
@@ -42,54 +46,54 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(SubmissionNotFoundException.class)
 	public ResponseEntity<Object> handleSubmissionNotFound(SubmissionNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(InstructorNotFoundException.class)
 	public ResponseEntity<Object> handleInstructorNotFound(InstructorNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(EnrollmentNotFoundException.class)
 	public ResponseEntity<Object> handleEnrollmentNotFound(EnrollmentNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(CourseNotFoundException.class)
 	public ResponseEntity<Object> handleCourseNotFound(CourseNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(AssignmentNotFoundException.class)
 	public ResponseEntity<Object> handleAssignmentNotFound(AssignmentNotFoundException ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", ex.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, ex.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException i) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", i.getMessage());
-		errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, i.getMessage());
+		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
@@ -97,8 +101,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("status", status.value());
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(STATUS, status.value());
 
 		Map<String, String> fieldErrors = new HashMap<>();
 		ex.getBindingResult().getFieldErrors()
@@ -111,8 +115,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleAllExceptions(Exception ex) {
 		Map<String, Object> errorDetails = new HashMap<>();
-		errorDetails.put("timestamp", LocalDateTime.now());
-		errorDetails.put("message", "Unexpected error occurred");
+		errorDetails.put(TIMESTAMP, LocalDateTime.now());
+		errorDetails.put(MESSAGE, "Unexpected error occurred");
 		errorDetails.put("details", ex.getMessage());
 		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

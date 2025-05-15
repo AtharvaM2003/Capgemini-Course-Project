@@ -2,7 +2,6 @@ package com.capgemini.courseproject.controllers;
 
 import java.util.List;
 
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,8 +63,8 @@ public class InstructorController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @Valid @RequestBody Instructor instructor
-			,BindingResult result) {
+	public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @Valid @RequestBody Instructor instructor,
+			BindingResult result) {
 		if (result.hasErrors()) {
 			throw new IllegalArgumentException(result.getFieldErrors().toString());
 		}
