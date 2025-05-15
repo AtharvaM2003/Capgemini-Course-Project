@@ -1,5 +1,8 @@
 package com.capgemini.courseproject.entities;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -11,12 +14,16 @@ public class Instructor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name = "instructor_id")
+	@Column(name = "instructor_id")
     private Long instructorId;
 
+	@NotBlank(message = "Name is mandatory")
+	@Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     @Column(name = "name")
     private String name;
 
+	@NotBlank(message = "Expertise is mandatory")
+    @Size(min = 3, max = 100, message = "Expertise must be between 3 and 100 characters")
     @Column(name = "expertise")
     private String expertise;
 
