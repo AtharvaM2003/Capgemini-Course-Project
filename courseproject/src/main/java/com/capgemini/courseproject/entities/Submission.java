@@ -2,6 +2,9 @@ package com.capgemini.courseproject.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -16,6 +19,8 @@ public class Submission {
     private Long submissionId;
 
     @Column(name = "submission_date")
+    @NotNull(message = "Submission date is required")
+    @PastOrPresent(message = "Submission date cannot be in the future")
     private LocalDate submissionDate;
 
     @Column(name = "status")
