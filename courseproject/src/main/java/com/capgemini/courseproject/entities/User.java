@@ -8,39 +8,38 @@ import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "users")
 public class User {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Long userId;
 
-	@NotBlank
-	@Size(min = 2, max = 50)
+	@NotBlank(message = "Username is mandatory")
+	@Size(min = 2, max = 50, message = "Username must be between 2 and 50 characters")
 	@Column(name = "user_name")
 	private String userName;
 
-	@NotBlank
-	@Email
+	@NotBlank(message = "Email is mandatory")
+	@Email(message = "Invalid email format")
 	@Column(name = "email", unique = true)
 	private String email;
 
-	@NotBlank
-	@Size(min = 6)
+	@NotBlank(message = "Password is mandatory")
+	@Size(min = 6, message = "Password must be at least 6 characters long")
 	@Column(name = "password")
 	private String password;
 
-	@NotBlank
-	@Pattern(regexp = "^[0-9]{10}$")
+	@NotBlank(message = "Phone number is mandatory")
+	@Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
 	@Column(name = "phone")
 	private String phone;
 
-	@NotBlank
+	@NotBlank(message = "User type is mandatory")
 	@Column(name = "user_type")
 	private String userType;
 

@@ -48,7 +48,7 @@ public class UserController {
 		log.info("POST /api/users - Request received to create user: {}", user);
 		if (result.hasErrors()) {
 			log.error("Validation failed for user creation: {}", result.getAllErrors());
-			throw new IllegalArgumentException("Invalid User Data");
+			throw new IllegalArgumentException(result.getFieldErrors().toString());
 		}
 		User savedUser = userService.createUser(user);
 		log.debug("User created with ID: {}", savedUser.getUserId());
@@ -61,7 +61,7 @@ public class UserController {
 		log.info("PUT /api/users/{} - Request received to update user: {}", id, newUser);
 		if (result.hasErrors()) {
 			log.error("Validation failed for user creation: {}", result.getAllErrors());
-			throw new IllegalArgumentException("Invalid User Data");
+			throw new IllegalArgumentException(result.getFieldErrors().toString());
 		}
 		User updatedUser = userService.updateUser(id, newUser);
 		log.debug("User with ID {} updated: {}", id, updatedUser);
