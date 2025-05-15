@@ -1,6 +1,11 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -9,35 +14,44 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "users")
 public class User {
-	 // userId, userName, email, password, phone, userType
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+	@Column(name = "user_id")
+	private Long userId;
 
+	@NotBlank(message = "Username is mandatory")
+	@Size(min = 2, max = 50, message = "Username must be between 2 and 50 characters")
 	@Column(name = "user_name")
-    private String userName;
+	private String userName;
 
-    @Column(name = "email")
-    private String email;
+	@NotBlank(message = "Email is mandatory")
+	@Email(message = "Invalid email format")
+	@Column(name = "email", unique = true)
+	private String email;
 
-    @Column(name = "password")
-    private String password;
+	@NotBlank(message = "Password is mandatory")
+	@Size(min = 6, message = "Password must be at least 6 characters long")
+	@Column(name = "password")
+	private String password;
 
-    @Column(name = "phone")
-    private String phone;
+	@NotBlank(message = "Phone number is mandatory")
+	@Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
+	@Column(name = "phone")
+	private String phone;
 
-    @Column(name = "user_type")
-    private String userType;
+	@NotBlank(message = "User type is mandatory")
+	@Column(name = "user_type")
+	private String userType;
 
-    @OneToMany(mappedBy = "user")
-    @JsonBackReference
-    private List<Enrollment> enrollments;
+	@OneToMany(mappedBy = "user")
+	@JsonBackReference
+	private List<Enrollment> enrollments;
 
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference
-    private List<Submission> submissions;
-    
+	@OneToMany(mappedBy = "user")
+	@JsonManagedReference
+	private List<Submission> submissions;
+
 	public User() {
 		super();
 	}

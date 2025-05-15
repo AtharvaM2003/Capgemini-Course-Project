@@ -3,7 +3,7 @@ package com.capgemini.courseproject.controllers;
 import java.net.URI;
 
 import java.util.List;
-
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,15 +45,14 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody User user) {
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User saved = userService.createUser(user);
 		return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/api/users/" + saved.getUserId()))
 				.body(saved);
-
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser) {
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User newUser) {
 		User user = userService.updateUser(id, newUser);
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 	}
