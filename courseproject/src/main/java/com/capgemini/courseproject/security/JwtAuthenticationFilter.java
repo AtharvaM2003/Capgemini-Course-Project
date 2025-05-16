@@ -17,20 +17,16 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	
 	private JwtUtils jwtService;
-	
+
 	CustomUserDetailsService userDetailsServiceImpl;
-	
+
 	@Autowired
 	public JwtAuthenticationFilter(JwtUtils jwtService, CustomUserDetailsService userDetailsServiceImpl) {
 		super();
 		this.jwtService = jwtService;
 		this.userDetailsServiceImpl = userDetailsServiceImpl;
 	}
-
-	
-
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -40,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		logger.info("Bearer Token : " + authHeader);
 		String token = null;
 		String username = null;
+
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 			logger.info("Token : " + token);
@@ -47,7 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			logger.info("Username from token : " + username);
 		}
 
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+		boolean isUserValidAndNotAuthenticated = (username != null
+				&& SecurityContextHolder.getContext().getAuthentication() == null);
+
+		if (isUserValidAndNotAuthenticated) {
 			UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
 			if (jwtService.validateToken(token, userDetails)) {
 				logger.info("Filter validated successfully");
@@ -59,6 +59,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				logger.info("Filter validate failed");
 			}
 		}
+
 		filterChain.doFilter(request, response);
 	}
+
 }

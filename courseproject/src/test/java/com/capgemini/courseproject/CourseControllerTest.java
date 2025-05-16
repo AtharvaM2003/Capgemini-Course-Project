@@ -27,11 +27,11 @@ class CourseControllerTest {
 	@InjectMocks
 	private CourseController courseController;
 
-	@InjectMocks
+	@Mock
 	private BindingResult bindingResult;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 
