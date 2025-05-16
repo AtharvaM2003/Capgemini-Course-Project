@@ -15,12 +15,14 @@ import java.util.Optional;
 @Slf4j
 public class AssignmentServiceImpl implements AssignmentService {
 
-	private final AssignmentRepository assignmentRepository;
+	private AssignmentRepository assignmentRepository;
 
 	@Autowired
-	public AssignmentServiceImpl(AssignmentRepository assignmentRepository) {
+	public void setAssignmentService(AssignmentRepository assignmentRepository) {
 		this.assignmentRepository = assignmentRepository;
 	}
+	
+
 
 	@Override
 	public Assignment createAssignment(Assignment assignment) {
