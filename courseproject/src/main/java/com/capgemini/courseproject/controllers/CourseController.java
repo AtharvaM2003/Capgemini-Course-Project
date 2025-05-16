@@ -94,8 +94,10 @@ public class CourseController {
 		return ResponseEntity.ok(assignments);
 	}
 
+
 	@GetMapping("/instructor/{instructorId}")
 	public List<String> getCourseTitlesByInstructor(@PathVariable Long instructorId) {
 		return courseService.getCourseTitlesByInstructorId(instructorId);
 	}
+
 }
