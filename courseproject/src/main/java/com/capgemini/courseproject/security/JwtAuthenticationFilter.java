@@ -17,20 +17,16 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	
 	private JwtUtils jwtService;
-	
+
 	CustomUserDetailsService userDetailsServiceImpl;
-	
+
 	@Autowired
 	public JwtAuthenticationFilter(JwtUtils jwtService, CustomUserDetailsService userDetailsServiceImpl) {
 		super();
 		this.jwtService = jwtService;
 		this.userDetailsServiceImpl = userDetailsServiceImpl;
 	}
-
-	
-
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -46,10 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			username = jwtService.extractUsername(token);
 			logger.info("Username from token : " + username);
 		}
-
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+		boolean isUsernamePresentAndAuthNull = (username != null
+				&& SecurityContextHolder.getContext().getAuthentication() == null);
+		if (isUsernamePresentAndAuthNull) {
 			UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
-			if (jwtService.validateToken(token, userDetails)) {
+			boolean isTokenValid = jwtService.validateToken(token, userDetails);
+			if (isTokenValid) {
 				logger.info("Filter validated successfully");
 				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
@@ -58,7 +56,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			} else {
 				logger.info("Filter validate failed");
 			}
+
 		}
+
 		filterChain.doFilter(request, response);
 	}
+
 }
