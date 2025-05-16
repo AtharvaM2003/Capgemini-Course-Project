@@ -80,7 +80,13 @@ public class CourseServiceImple implements CourseService {
 	}
 
 	@Override
-	public  List<Assignment> findByCourseCourseId(Long courseId) {
+	public List<Assignment> findByCourseCourseId(Long courseId) {
 		return assignmentRepository.findByCourse_CourseId(courseId);
 	}
+
+	@Override
+	public List<String> getCourseTitlesByInstructorId(Long instructorId) {
+		return courseRepository.findCourseTitlesByInstructorId(instructorId);
+	}
+
 }
