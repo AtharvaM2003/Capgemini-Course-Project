@@ -79,6 +79,8 @@ function renderPopularCoursesChart() {
         .then(data => {
             const courseMap = new Map();
 
+			console.log("Chart API response:", data);
+
             data.forEach(course => {
                 const title = course.courseTitle;
                 const count = course.totalEnrollments || 0;

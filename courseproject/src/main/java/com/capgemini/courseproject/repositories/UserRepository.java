@@ -1,5 +1,6 @@
 package com.capgemini.courseproject.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u.userName FROM User u WHERE u.userId = :userId")
 	String findUserNameById(@Param("userId") Long userId);
 
+	@Query("Select u FROM User u where u.userType='USER'")
+	List<User> findAllStudents();
+	
+	@Query("Select u FROM User u where u.userType='ADMIN'")
+	List<User> findAllInstructors();
 }
