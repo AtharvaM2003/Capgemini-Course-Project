@@ -14,4 +14,5 @@ public interface InstructorService {
 	Instructor updateInstructor(Instructor instructor, Long instructorId);
 
 	boolean deleteInstructor(Long instructorId);
+
 }

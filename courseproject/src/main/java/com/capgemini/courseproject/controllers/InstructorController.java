@@ -81,4 +81,5 @@ public class InstructorController {
 		log.info("Instructor with ID {} successfully deleted", id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
+
 }
