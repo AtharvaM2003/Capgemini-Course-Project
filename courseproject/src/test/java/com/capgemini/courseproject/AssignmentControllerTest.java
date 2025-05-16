@@ -58,7 +58,7 @@ class AssignmentControllerTest {
     }
 
     @Test
-    void testGetAssignmentById_found() {
+    void testGetAssignmentByIdFound() {
         Assignment assignment = new Assignment();
         assignment.setAssignmentId(1L);
         assignment.setTitle("Assignment X");
@@ -74,7 +74,7 @@ class AssignmentControllerTest {
     }
 
     @Test
-    void testGetAssignmentById_notFound() {
+    void testGetAssignmentByIdNotFound() {
         when(assignmentService.getAssignmentById(99L)).thenReturn(Optional.empty());
 
         ResponseEntity<Assignment> response = assignmentController.getAssignmentById(99L);
@@ -84,7 +84,7 @@ class AssignmentControllerTest {
     }
 
     @Test
-    void testCreateAssignment_valid() {
+    void testCreateAssignmentValid() {
         Assignment input = new Assignment();
         input.setTitle("New Assignment");
         input.setDescription("New Description");
@@ -105,9 +105,9 @@ class AssignmentControllerTest {
     }
 
     @Test
-    void testCreateAssignment_invalid() {
+    void testCreateAssignmentInvalid() {
         Assignment input = new Assignment();
-        input.setTitle(""); // Invalid input
+        input.setTitle(""); 
 
         when(bindingResult.hasErrors()).thenReturn(true);
 

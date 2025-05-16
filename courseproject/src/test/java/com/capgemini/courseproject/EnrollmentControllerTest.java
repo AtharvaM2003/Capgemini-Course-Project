@@ -17,8 +17,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-public class EnrollmentControllerTest {
+ class EnrollmentControllerTest {
 
     @Mock
     private EnrollmentService enrollmentService;
@@ -30,12 +29,12 @@ public class EnrollmentControllerTest {
     private BindingResult bindingResult;
 
     @BeforeEach
-    public void setUp() {
+     void setUp() {
         MockitoAnnotations.openMocks(this); 
     }
 
     @Test
-    public void testCreateEnrollment() {
+     void testCreateEnrollment() {
         
         User user = new User();
         Course course = new Course();
@@ -52,7 +51,7 @@ public class EnrollmentControllerTest {
 
 
     @Test
-    public void testGetAllEnrollments() {
+     void testGetAllEnrollments() {
     
         Enrollment e1 = new Enrollment(1L, new Course(), new User(), LocalDate.now());
         Enrollment e2 = new Enrollment(2L, new Course(), new User(), LocalDate.now().minusDays(1));
@@ -67,7 +66,7 @@ public class EnrollmentControllerTest {
     }
 
     @Test
-    public void testGetEnrollmentById() {
+     void testGetEnrollmentById() {
 
         Enrollment e = new Enrollment(1L, new Course(), new User(), LocalDate.now());
         when(enrollmentService.getEnrollmentById(1L)).thenReturn(Optional.of(e));
