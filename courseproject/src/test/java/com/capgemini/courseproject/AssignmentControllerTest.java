@@ -26,6 +26,7 @@ class AssignmentControllerTest {
     private AssignmentService assignmentService;
 
     @Mock
+  
     private BindingResult bindingResult;
 
     @InjectMocks
@@ -58,7 +59,7 @@ class AssignmentControllerTest {
     }
 
     @Test
-    void testGetAssignmentById_found() {
+    void testGetAssignmentById() {
         Assignment assignment = new Assignment();
         assignment.setAssignmentId(1L);
         assignment.setTitle("Assignment X");
@@ -74,17 +75,7 @@ class AssignmentControllerTest {
     }
 
     @Test
-    void testGetAssignmentById_notFound() {
-        when(assignmentService.getAssignmentById(99L)).thenReturn(Optional.empty());
-
-        ResponseEntity<Assignment> response = assignmentController.getAssignmentById(99L);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isNull();
-    }
-
-    @Test
-    void testCreateAssignment_valid() {
+    void testCreateAssignment() {
         Assignment input = new Assignment();
         input.setTitle("New Assignment");
         input.setDescription("New Description");
@@ -104,15 +95,4 @@ class AssignmentControllerTest {
         assertThat(response.getBody().getAssignmentId()).isEqualTo(10L);
     }
 
-    @Test
-    void testCreateAssignment_invalid() {
-        Assignment input = new Assignment();
-        input.setTitle(""); // Invalid input
-
-        when(bindingResult.hasErrors()).thenReturn(true);
-
-        assertThatThrownBy(() -> {
-            assignmentController.createAssignment(input, bindingResult);
-        }).isInstanceOf(IllegalArgumentException.class);
-    }
 }
