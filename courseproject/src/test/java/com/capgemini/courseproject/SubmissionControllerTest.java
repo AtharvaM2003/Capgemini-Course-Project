@@ -35,7 +35,7 @@ class SubmissionControllerTest {
 
 	@Test
 	void testGetAllSubmissions() {
-		User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+		User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student");
 		Assignment mockAssignment = new Assignment();
 
 		Submission submission1 = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
@@ -53,7 +53,7 @@ class SubmissionControllerTest {
 
 	@Test
 	void testGetSubmissionById() {
-		User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+		User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student");
 		Assignment mockAssignment = new Assignment();
 		Submission mockSubmission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
 
