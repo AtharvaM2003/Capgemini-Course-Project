@@ -210,7 +210,7 @@ function renderStudentDashboardCharts() {
 function redirectToLogin() {
     const currentPath = window.location.pathname;
     if (!currentPath.includes("login.html")) {
-        window.location.href = "../pages/login.html";
+        window.location.href = "..web-pages/pages/login.html";
     }
 }
 

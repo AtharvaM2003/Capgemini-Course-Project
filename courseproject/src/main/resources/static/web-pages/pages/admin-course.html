@@ -88,7 +88,13 @@
 
         // Fetch instructors
         function loadInstructors() {
-            fetch(`${apiUrl}/instructors`)
+            fetch(`${apiUrl}/instructors`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
                 .then(res => res.json())
                 .then(data => {
                     instructorInput.innerHTML = '<option value="">--Select--</option>';
@@ -102,7 +108,13 @@
 
         // Fetch and render courses
         function fetchAndRenderCourses() {
-            fetch(`${apiUrl}/courses`)
+            fetch(`${apiUrl}/courses`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
                 .then(res => res.json())
                 .then(data => {
                     allCourses = data;
@@ -191,14 +203,18 @@
             const newCourse = {
                 title: titleInput.value.trim(),
                 description: descriptionInput.value.trim(),
-                instructorId: instructorInput.value,
-                fees: feeInput.value.trim()
+                fees: parseFloat(feeInput.value.trim()), // Ensuring numeric value
+                instructor: {
+                    instructorId: parseInt(instructorInput.value, 10)
+                }
             };
+
 
             fetch(`${apiUrl}/courses`, {
                 method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
                 },
                 body: JSON.stringify(newCourse)
             }).then(() => {
@@ -212,14 +228,17 @@
             const updatedCourse = {
                 title: titleInput.value.trim(),
                 description: descriptionInput.value.trim(),
-                instructorId: instructorInput.value,
-                fees: feeInput.value
+                instructor: {
+                    instructorId: parseInt(instructorInput.value, 10)
+                },
+                fees: parseFloat(feeInput.value.trim())
             };
 
             fetch(`${apiUrl}/courses/${editId}`, {
-                method: "PUT",
+                method: 'PUT',
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
                 },
                 body: JSON.stringify(updatedCourse)
             }).then(() => {
@@ -232,7 +251,13 @@
         }
 
         function loadCourseForEdit(id) {
-            fetch(`${apiUrl}/courses/${id}`)
+            fetch(`${apiUrl}/courses/${id}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
                 .then(res => res.json())
                 .then(data => {
                     titleInput.value = data.title;
