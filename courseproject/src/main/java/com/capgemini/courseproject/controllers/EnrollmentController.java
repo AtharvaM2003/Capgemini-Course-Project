@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.capgemini.courseproject.dto.CourseInfoDto;
+
+import com.capgemini.courseproject.dto.EnrollmentReportDTO;
+
 import com.capgemini.courseproject.entities.Enrollment;
 import com.capgemini.courseproject.services.EnrollmentService;
 
@@ -81,5 +85,12 @@ public class EnrollmentController {
 		return enrollment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 
 	}
+	
+	@GetMapping("/enrollment-report")
+	public ResponseEntity<List<EnrollmentReportDTO>> getEnrollmentReport() {
+	    List<EnrollmentReportDTO> report = enrollmentService.getEnrollmentReport();
+	    return ResponseEntity.ok(report);  
+	}
+
 
 }

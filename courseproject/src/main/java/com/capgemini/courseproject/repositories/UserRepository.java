@@ -17,6 +17,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByUserName(String userName);
 
 	Optional<User> findByEmail(String email);
+	
+	@Query("SELECT u.userName FROM User u WHERE u.userId = :userId")
+	String findUserNameById(@Param("userId") Long userId);
 
 	@Query("SELECT new com.capgemini.courseproject.dto.StudentDto(u.userId, u.userName) " + "FROM User u "
 			+ "WHERE u.userType = 'USER'")

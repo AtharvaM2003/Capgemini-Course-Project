@@ -101,4 +101,11 @@ public class CourseController {
 		List<CourseEnrollmentDto> report = courseService.getCourseEnrollmentReport();
 		return ResponseEntity.status(HttpStatus.OK).body(report);
 	}
+
+
+	@GetMapping("/instructor/{instructorId}")
+	public List<String> getCourseTitlesByInstructor(@PathVariable Long instructorId) {
+		return courseService.getCourseTitlesByInstructorId(instructorId);
+	}
+
 }

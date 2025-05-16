@@ -4,6 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+
+import org.springframework.data.repository.query.Param;
+
 import org.springframework.stereotype.Repository;
 
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
@@ -15,5 +19,11 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 			+ "FROM Course c " + "JOIN c.instructor i " + "LEFT JOIN c.enrollments e "
 			+ "GROUP BY c.courseId, c.title, i.name")
 	List<CourseEnrollmentDto> getCourseEnrollmentReport();
+
+	@Query("SELECT c.title FROM Course c WHERE c.instructor.instructorId = ?1")
+	List<String> findCourseTitlesByInstructorId(Long instructorId);
+
+	@Query("SELECT c.title FROM Course c WHERE c.courseId = :courseId")
+	String findCourseTitleById(@Param("courseId") Long courseId);
 
 }

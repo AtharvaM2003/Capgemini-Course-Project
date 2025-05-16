@@ -73,6 +73,10 @@ public class CourseServiceImple implements CourseService {
 	@Override
 	public Optional<Course> getCourseById(Long courseId) {
 		log.debug("Fetching course by ID : {}", courseId);
+		
+		if (!courseRepository.existsById(courseId)) {
+			throw new CourseNotFoundException("Course not found with icourseId" + courseId);
+		}
 		return courseRepository.findById(courseId);
 	}
 
@@ -82,8 +86,14 @@ public class CourseServiceImple implements CourseService {
 	}
 
 	@Override
+
 	public List<CourseEnrollmentDto> getCourseEnrollmentReport() {
 
 		return courseRepository.getCourseEnrollmentReport();
 	}
+
+	public List<String> getCourseTitlesByInstructorId(Long instructorId) {
+		return courseRepository.findCourseTitlesByInstructorId(instructorId);
+	}
+
 }

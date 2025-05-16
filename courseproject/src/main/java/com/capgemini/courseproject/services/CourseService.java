@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CourseService {
-	
+
     Course addCourse(Course course);
     
     Course updateCourse(Long courseId, Course updatedCourse);
@@ -21,5 +21,8 @@ public interface CourseService {
     List<Assignment> findByCourseCourseId(Long courseId);
     
 	List<CourseEnrollmentDto> getCourseEnrollmentReport();
+
+	List<String> getCourseTitlesByInstructorId(Long instructorId);
+
 
 }

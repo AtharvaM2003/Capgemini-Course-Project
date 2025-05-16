@@ -1,0 +1,156 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#"
+			onclick="loadPage('admin-dashboard.html')">Reports</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Instructor-wise
+			Course List</li>
+	</ol>
+</nav>
+
+<h2 class="mb-3">Instructor-wise Course List</h2>
+
+<div class="mb-3">
+	<input type="text" id="instructorSearchInput"
+		class="form-control form-control mb-3"
+		placeholder="Search by Instructor Name..." />
+</div>
+
+<div class="table-responsive">
+	<table class="table table-bordered align-middle">
+		<thead class="table-light">
+			<tr>
+				<th>Instructor ID</th>
+				<th>Instructor Name</th>
+				<th>Expertise</th>
+				<th>Courses Assigned</th>
+			</tr>
+		</thead>
+		<tbody id="instructorCourseTableBody">
+		</tbody>
+	</table>
+</div>
+
+<div class="modal fade" id="coursesModal" tabindex="-1"
+	aria-labelledby="coursesModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Courses Assigned</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="coursesModalBody"></div>
+		</div>
+	</div>
+</div>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (() => {
+        let allInstructors = [];
+        let sortDirection = 1;
+        const apiUrl = "http://localhost:8080/api";
+        const tbody = document.getElementById("instructorCourseTableBody");
+        const searchInput = document.getElementById("instructorSearchInput");
+
+        // Searching
+        searchInput.addEventListener("input", () => {
+            const keyword = searchInput.value.toLowerCase();
+            const filtered = allInstructors.filter(instr =>
+                instr.name.toLowerCase().includes(keyword) ||
+                instr.expertise.toLowerCase().includes(keyword)
+            );
+            renderInstructorCourse(filtered);
+        });
+
+        // Sorting
+        document.querySelector("th:nth-child(2)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(2)").addEventListener("click", () => {
+            const sorted = [...allInstructors].sort((a, b) =>
+                a.name.localeCompare(b.name) * sortDirection
+            );
+            sortDirection *= -1;
+            renderInstructorCourse(sorted);
+        });
+
+        document.querySelector("th:nth-child(3)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(3)").addEventListener("click", () => {
+            const sorted = [...allInstructors].sort((a, b) =>
+                a.expertise.localeCompare(b.expertise) * sortDirection
+            );
+            sortDirection *= -1;
+            renderInstructorCourse(sorted);
+        });
+
+        // Fetch Instructor Data
+        function fetchInstructorCourse() {
+            fetch(`${apiUrl}/instructors`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(instructorData => {
+                    allInstructors = instructorData;
+                    renderInstructorCourse(allInstructors);
+                })
+                .catch(err => console.error("Error loading instructors:", err));
+        }
+
+        // Render Instructor Table Rows
+        function renderInstructorCourse(instructors) {
+            tbody.innerHTML = "";
+
+            instructors.forEach(instructor => {
+                const row = `
+                <tr>
+                    <td>${instructor.instructorId}</td>
+                    <td>${instructor.name}</td>
+                    <td>${instructor.expertise || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="showCoursesModal(${instructor.instructorId}, '${instructor.name}')">
+                            View Courses
+                        </button>
+                    </td>
+                </tr>
+            `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Show Modal with Course List
+        window.showCoursesModal = function (instructorId, instructorName) {
+            const modalBody = document.getElementById("coursesModalBody");
+            const modalTitle = document.querySelector("#coursesModal .modal-title");
+            modalTitle.textContent = `Courses Assigned to ${instructorName}`;
+
+            fetch(`${apiUrl}/courses/instructor/${instructorId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(courses => {
+                    if (courses.length > 0) {
+                        modalBody.innerHTML = `<ul>${courses.map(title => `<li>${title}</li>`).join('')}</ul>`;
+                    } else {
+                        modalBody.innerHTML = `<p>No courses assigned.</p>`;
+                    }
+
+                    const modal = new bootstrap.Modal(document.getElementById('coursesModal'));
+                    modal.show();
+                })
+                .catch(err => {
+                    modalBody.innerHTML = `<p class="text-danger">Failed to load courses.</p>`;
+                    console.error("Error fetching courses:", err);
+                });
+        };
+
+        fetchInstructorCourse();
+    })();
+</script>
