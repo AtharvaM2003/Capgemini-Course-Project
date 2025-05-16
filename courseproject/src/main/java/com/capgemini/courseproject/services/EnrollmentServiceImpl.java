@@ -7,8 +7,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import com.capgemini.courseproject.dto.CourseInfoDto;
+
 import com.capgemini.courseproject.dto.EnrollmentReportDTO;
 import com.capgemini.courseproject.entities.Course;
+
 import com.capgemini.courseproject.entities.Enrollment;
 import com.capgemini.courseproject.entities.User;
 import com.capgemini.courseproject.repositories.CourseRepository;
@@ -86,6 +90,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	                enroll.getEnrollmentDate()
 	        );
 	    }).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CourseInfoDto> findCoursesByStudentId(Long studentId) {
+
+		return enrollmentRepository.findCoursesByStudentId(studentId);
 	}
 
 }

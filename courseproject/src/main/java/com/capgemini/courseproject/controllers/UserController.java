@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import com.capgemini.courseproject.dto.StudentDto;
 import com.capgemini.courseproject.entities.User;
 import com.capgemini.courseproject.services.UserService;
 
@@ -41,6 +42,20 @@ public class UserController {
 		User user = userService.findUserById(id);
 		log.debug("Fetched User: {}", user);
 		return ResponseEntity.status(HttpStatus.OK).body(user);
+	}
+
+	@GetMapping("/students/{id}")
+	public ResponseEntity<List<StudentDto>> fetchStudentOfCourses(@PathVariable Long id) {
+		List<StudentDto> students = userService.fetchStudentOfCourses(id);
+		return ResponseEntity.status(HttpStatus.OK).body(students);
+
+	}
+
+	@GetMapping("/students")
+	public ResponseEntity<List<StudentDto>> fetchAllStudentsNames() {
+		List<StudentDto> students = userService.fetchAllStudentsNames();
+		return ResponseEntity.status(HttpStatus.OK).body(students);
+
 	}
 
 	@PostMapping

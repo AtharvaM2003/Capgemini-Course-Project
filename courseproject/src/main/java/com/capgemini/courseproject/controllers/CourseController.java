@@ -1,10 +1,12 @@
 package com.capgemini.courseproject.controllers;
 
+import com.capgemini.courseproject.dto.CourseEnrollmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.services.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +94,12 @@ public class CourseController {
 		}
 		log.debug("Found {} assignments for course ID {}", assignments.size(), id);
 		return ResponseEntity.ok(assignments);
+	}
+
+	@GetMapping("/coursereport")
+	public ResponseEntity<List<CourseEnrollmentDto>> getCourseEnrollmentReport() {
+		List<CourseEnrollmentDto> report = courseService.getCourseEnrollmentReport();
+		return ResponseEntity.status(HttpStatus.OK).body(report);
 	}
 
 

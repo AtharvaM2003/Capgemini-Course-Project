@@ -1,0 +1,106 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#" onclick="loadPage('admin-dashboard.html')">Reports</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Enrollment Report</li>
+    </ol>
+</nav>
+
+<h2 class="mb-3">Course Enrollment Report</h2>
+
+<div class="mb-3">
+    <input type="text" id="courseSearch" class="form-control form-control mb-3" placeholder="Search by Course Title...">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Course ID</th>
+                <th>Course Title</th>
+                <th>Instructor Name</th>
+                <th>Total Enrollments</th>
+            </tr>
+        </thead>
+        <tbody id="courseEnrollBody"></tbody>
+    </table>
+</div>
+
+<script>
+    (() => {
+        const apiUrl = "http://localhost:8080/api";
+        const reportUrl = `${apiUrl}/courses/coursereport`;
+        const tbody = document.getElementById("courseEnrollBody");
+        const searchInput = document.getElementById("courseSearch");
+
+        let allCourses = [];
+        let sortDirection = 1;
+
+        // Search
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = allCourses.filter(course =>
+                course.courseTitle.toLowerCase().includes(query)
+            );
+            renderCourseRows(filtered);
+        });
+
+        // Sort by Course Title
+        document.querySelector("th:nth-child(2)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(2)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) =>
+                a.courseTitle.localeCompare(b.courseTitle) * sortDirection
+            );
+            sortDirection *= -1;
+            renderCourseRows(sorted);
+        });
+
+        // Sort by Instructor Name
+        document.querySelector("th:nth-child(3)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(3)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) =>
+                a.instructorName.localeCompare(b.instructorName) * sortDirection
+            );
+            sortDirection *= -1;
+            renderCourseRows(sorted);
+        });
+
+        // Fetch course report
+        function fetchCourseEnrollmentReport() {
+            fetch(reportUrl, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    allCourses = data;
+                    renderCourseRows(allCourses);
+                })
+                .catch(err => console.error("Failed to load report:", err));
+        }
+
+        // Render course rows
+        function renderCourseRows(courses) {
+            tbody.innerHTML = "";
+            courses.forEach(course => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${course.courseId}</td>
+                <td>${course.courseTitle}</td>
+                <td>${course.instructorName}</td>
+                <td>${course.totalEnrollments}</td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        fetchCourseEnrollmentReport();
+    })();
+
+    //END-----------------------------------------------------------
+
+</script>
