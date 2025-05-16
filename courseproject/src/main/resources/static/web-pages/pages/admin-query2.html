@@ -1,0 +1,97 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="#" onclick="loadPage('admin-query2.html')">Queries</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Students by Course
+    </li>
+  </ol>
+</nav>
+
+<div class="container mt-4">
+  <div class="form-group">
+    <label for="courseDropdown">Select Course:</label>
+    <select class="form-control" id="courseDropdown">
+      <option value="">-- Select Course --</option>
+    </select>
+  </div>
+
+  <h4 class="mt-4">Students Enrolled:</h4>
+  <ul id="studentList" class="list-group"></ul>
+</div>
+<script>
+  (() => {
+    let allCourses = [];
+    const CoursesUrl = "http://localhost:8080/api/courses";
+    const studentsByCourseUrl = "http://localhost:8080/api/users/students/";
+
+    // Fetch Courses only
+    function fetchCourses() {
+      fetch(CoursesUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+      })
+        .then((res) => res.json())
+        .then((coursesData) => {
+          allCourses = coursesData;
+          renderCourseDropdown();
+        })
+        .catch((error) => {
+          console.error("Error fetching courses:", error);
+        });
+    }
+
+    function renderCourseDropdown() {
+      const dropdown = document.getElementById("courseDropdown");
+      allCourses.forEach((course) => {
+        const option = document.createElement("option");
+        option.value = course.courseId;
+        option.textContent = course.title;
+        dropdown.appendChild(option);
+      });
+
+      dropdown.addEventListener("change", fetchStudents);
+    }
+
+    function fetchStudents() {
+      const selectedCourseId = document.getElementById("courseDropdown").value;
+      const studentList = document.getElementById("studentList");
+      studentList.innerHTML = "";
+
+      if (selectedCourseId) {
+        fetch(`${studentsByCourseUrl}${selectedCourseId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getAuthorization(),
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.length > 0) {
+              data.forEach((student) => {
+                const li = document.createElement("li");
+                li.className = "list-group-item";
+                li.textContent = `${student.userId}.  ${student.userName}`;
+                studentList.appendChild(li);
+              });
+            } else {
+              const li = document.createElement("li");
+              li.className = "list-group-item";
+              li.textContent = "No students enrolled.";
+              studentList.appendChild(li);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching students:", error);
+          });
+      }
+    }
+
+    fetchCourses();
+  })();
+</script>

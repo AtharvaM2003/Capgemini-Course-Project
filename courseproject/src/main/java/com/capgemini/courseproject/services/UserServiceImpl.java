@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.capgemini.courseproject.dto.StudentDto;
 import com.capgemini.courseproject.entities.User;
 import com.capgemini.courseproject.exceptions.EmailAlreadyExistsException;
 import com.capgemini.courseproject.exceptions.UserAlreadyExistsException;
@@ -101,5 +102,16 @@ public class UserServiceImpl implements UserService {
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("User not found with this email"));
+	}
+
+	@Override
+	public List<StudentDto> fetchAllStudentsNames() {
+		return userRepository.fetchAllStudentsNames();
+	}
+
+	@Override
+	public List<StudentDto> fetchStudentOfCourses(Long id) {
+
+		return userRepository.fetchStudentOfCourses(id);
 	}
 }

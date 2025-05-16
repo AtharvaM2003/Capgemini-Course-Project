@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.capgemini.courseproject.dto.CourseInfoDto;
 import com.capgemini.courseproject.entities.Enrollment;
 
 import com.capgemini.courseproject.repositories.EnrollmentRepository;
@@ -44,6 +45,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		log.debug("Fetching enrollments by ID:{}", enrollmentId);
 		return enrollmentRepository.findById(enrollmentId);
 
+	}
+
+	@Override
+	public List<CourseInfoDto> findCoursesByStudentId(Long studentId) {
+
+		return enrollmentRepository.findCoursesByStudentId(studentId);
 	}
 
 }

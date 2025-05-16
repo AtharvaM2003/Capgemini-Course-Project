@@ -1,5 +1,6 @@
 package com.capgemini.courseproject.services;
 
+import com.capgemini.courseproject.dto.CourseEnrollmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import java.util.List;
@@ -18,4 +19,7 @@ public interface CourseService {
     Optional<Course> getCourseById(Long courseId);
     
     List<Assignment> findByCourseCourseId(Long courseId);
+    
+	List<CourseEnrollmentDto> getCourseEnrollmentReport();
+
 }

@@ -3,6 +3,7 @@ package com.capgemini.courseproject.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.capgemini.courseproject.dto.CourseInfoDto;
 import com.capgemini.courseproject.entities.Enrollment;
 
 public interface EnrollmentService {
@@ -12,5 +13,7 @@ public interface EnrollmentService {
 	List<Enrollment> getAllEnrollments();
 
 	Optional<Enrollment> getEnrollmentById(Long enrollmentId);
+
+	List<CourseInfoDto> findCoursesByStudentId(Long studentId);
 
 }
