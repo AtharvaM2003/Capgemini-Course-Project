@@ -35,4 +35,10 @@ public class SubmissionServiceImpl implements SubmissionService {
 		});
 	}
 
+	@Override
+	public Submission createSubmission(Submission submission) {
+		log.debug("Saving new submission to the repository");
+		return repository.save(submission);
+	}
+
 }

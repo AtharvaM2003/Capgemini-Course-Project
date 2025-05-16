@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -27,6 +28,9 @@ class SubmissionControllerTest {
 
 	@InjectMocks
 	private SubmissionController submissionController;
+	
+	@Mock
+	private BindingResult bindingResult;
 
 	@BeforeEach
 	void setUp() {
@@ -65,5 +69,33 @@ class SubmissionControllerTest {
 		assertThat(response.getBody().getSubmissionId()).isEqualTo(1L);
 		assertThat(response.getBody().getStatus()).isTrue();
 	}
+	
+	@Test
+	void testCreateSubmission() {
+	    
+	    User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+	    Assignment mockAssignment = new Assignment();
+	    Submission submissionToCreate = new Submission(null, mockAssignment, mockUser, LocalDate.now(), true);
+	    Submission savedSubmission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
+
+	    
+	    when(submissionService.createSubmission(submissionToCreate)).thenReturn(savedSubmission);
+
+	   
+	    ResponseEntity<Submission> response = submissionController.createSubmission(submissionToCreate, bindingResult );
+
+	    
+	    assertThat(response.getBody()).isNotNull();
+	    assertThat(response.getBody().getSubmissionId()).isEqualTo(1L);
+	    assertThat(response.getBody().getStatus()).isTrue();
+	}
+
+	
+	
+	
+	
+	
+	
+
 
 }
