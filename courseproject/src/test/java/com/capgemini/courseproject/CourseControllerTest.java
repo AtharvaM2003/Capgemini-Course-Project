@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.capgemini.courseproject.controllers.CourseController;
+import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.services.CourseService;
 
@@ -63,12 +64,12 @@ class CourseControllerTest {
 
 	@Test
 	void testGetAllCourses() {
-		List<Course> courses = Arrays.asList(new Course(1L, "Java", "Basics", null, null, null, 0.0),
-				new Course(2L, "Python", "Data Science", null, null, null, 0.0));
+		List<CourseDto> courses = Arrays.asList(new CourseDto(1L, "Java", "Basics", null, null, null),
+				new CourseDto(2L, "Python", "Data Science", null, null, null));
 
 		when(courseService.getAllCourses()).thenReturn(courses);
 
-		ResponseEntity<List<Course>> response = courseController.getAllCourses();
+		ResponseEntity<List<CourseDto>> response = courseController.getAllCourses();
 
 		assertThat(response.getBody()).hasSize(2);
 	}

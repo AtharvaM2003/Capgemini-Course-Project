@@ -1,5 +1,6 @@
 package com.capgemini.courseproject.services;
 
+import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
@@ -65,10 +66,11 @@ public class CourseServiceImple implements CourseService {
 	}
 
 	@Override
-	public List<Course> getAllCourses() {
+	public List<CourseDto> getAllCourses() {
 		log.debug("Fetching all courses from repository");
-		return courseRepository.findAll();
+		return courseRepository.getAllCourses();
 	}
+
 
 	@Override
 	public Optional<Course> getCourseById(Long courseId) {

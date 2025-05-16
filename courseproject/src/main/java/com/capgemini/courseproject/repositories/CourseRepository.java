@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import org.springframework.stereotype.Repository;
 
+import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
 import com.capgemini.courseproject.entities.Course;
 
@@ -25,5 +26,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
 	@Query("SELECT c.title FROM Course c WHERE c.courseId = :courseId")
 	String findCourseTitleById(@Param("courseId") Long courseId);
+
+	
+    @Query("SELECT new com.capgemini.courseproject.dto.CourseDto("
+            + "c.id, c.title, c.description, c.instructor.id, c.instructor.name, c.fees) "
+            + "FROM Course c")
+	List<CourseDto> getAllCourses();
+
 
 }

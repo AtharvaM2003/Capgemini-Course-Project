@@ -1,5 +1,6 @@
 package com.capgemini.courseproject.controllers;
 
+import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
@@ -39,9 +40,9 @@ public class CourseController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Course>> getAllCourses() {
+	public ResponseEntity<List<CourseDto>> getAllCourses() {
 		log.info("GET /api/courses - Request received to fetch all courses");
-		List<Course> courses = courseService.getAllCourses();
+		List<CourseDto> courses = courseService.getAllCourses();
 		log.debug("Returning {} courses", courses.size());
 		return ResponseEntity.ok(courses);
 	}
