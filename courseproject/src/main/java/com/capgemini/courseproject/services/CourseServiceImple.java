@@ -72,6 +72,10 @@ public class CourseServiceImple implements CourseService {
 	@Override
 	public Optional<Course> getCourseById(Long courseId) {
 		log.debug("Fetching course by ID : {}", courseId);
+		
+		if (!courseRepository.existsById(courseId)) {
+			throw new CourseNotFoundException("Course not found with icourseId" + courseId);
+		}
 		return courseRepository.findById(courseId);
 	}
 
