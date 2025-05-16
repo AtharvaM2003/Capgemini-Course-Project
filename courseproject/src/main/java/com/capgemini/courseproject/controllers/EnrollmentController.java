@@ -88,7 +88,11 @@ public class EnrollmentController {
 	
 	@GetMapping("/enrollment-report")
 	public ResponseEntity<List<EnrollmentReportDTO>> getEnrollmentReport() {
+		
+		log.info("Fetching enrollment report");
 	    List<EnrollmentReportDTO> report = enrollmentService.getEnrollmentReport();
+	    
+	    log.debug("Enrollment report size is {}:", report.size());
 	    return ResponseEntity.ok(report);  
 	}
 

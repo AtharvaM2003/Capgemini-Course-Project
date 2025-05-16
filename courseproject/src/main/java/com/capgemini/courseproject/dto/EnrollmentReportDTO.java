@@ -7,6 +7,7 @@ public class EnrollmentReportDTO {
     private String courseTitle;
     private String studentName;
     private LocalDate enrollmentDate;
+    
 
     public EnrollmentReportDTO(Long enrollmentId, String courseTitle, String studentName, LocalDate enrollmentDate) {
         this.enrollmentId = enrollmentId;
