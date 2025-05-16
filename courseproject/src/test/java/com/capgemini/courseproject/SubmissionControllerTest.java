@@ -73,7 +73,7 @@ class SubmissionControllerTest {
 	@Test
 	void testCreateSubmission() {
 	    
-	    User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+	    User mockUser = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student");
 	    Assignment mockAssignment = new Assignment();
 	    Submission submissionToCreate = new Submission(null, mockAssignment, mockUser, LocalDate.now(), true);
 	    Submission savedSubmission = new Submission(1L, mockAssignment, mockUser, LocalDate.now(), true);
