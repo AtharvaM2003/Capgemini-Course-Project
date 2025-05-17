@@ -40,10 +40,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 		Assignment savedAssignment = assignmentRepository.save(assignment);
 
-		AssignmentDto responseDto = new AssignmentDto(savedAssignment.getAssignmentId(), savedAssignment.getTitle(),
+		return new AssignmentDto(savedAssignment.getAssignmentId(), savedAssignment.getTitle(),
 				savedAssignment.getDescription(), course.getCourseId(), course.getTitle());
-
-		return responseDto;
 	}
 
 	@Override
@@ -69,14 +67,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 			Assignment existingAssignment = existingAssignmentOpt.get();
 			existingAssignment.setTitle(updatedAssignment.getTitle());
 			existingAssignment.setDescription(updatedAssignment.getDescription());
-//			existingAssignment.setSubmissions(updatedAssignment.getSubmissions());
-//			existingAssignment.setCourse(updatedAssignment.getCourse());
-//			existingAssignment.getSubmissions().clear();
-//			existingAssignment.getSubmissions().addAll(updatedAssignment.getSubmissions());
-//			log.debug("Assignment updated successfully: {}", existingAssignment);
+
 			return assignmentRepository.save(existingAssignment);
 		}
 		return null;
 	}
-	
+
 }
