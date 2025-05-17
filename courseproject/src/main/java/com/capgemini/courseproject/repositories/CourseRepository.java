@@ -33,5 +33,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             + "FROM Course c")
 	List<CourseDto> getAllCourses();
 
+    long count();
 
 }

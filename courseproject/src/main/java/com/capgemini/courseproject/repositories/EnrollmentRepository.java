@@ -14,4 +14,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 			+ "FROM Enrollment e " + "WHERE e.user.userId = :studentId")
 	List<CourseInfoDto> findCoursesByStudentId(@Param("studentId") Long studentId);
 
+	
+	long count();
 }

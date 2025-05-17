@@ -29,4 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "JOIN e.user u " + "WHERE u.userType = 'USER' AND e.course.courseId = :courseId")
 	List<StudentDto> fetchStudentOfCourses(@Param("courseId") Long courseId);
 
+	
+	@Query("Select u FROM User u where u.userType='USER'")
+	List<User> findAllStudents();
 }

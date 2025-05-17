@@ -6,4 +6,5 @@ import com.capgemini.courseproject.entities.Instructor;
 
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
+	long count();
 }
