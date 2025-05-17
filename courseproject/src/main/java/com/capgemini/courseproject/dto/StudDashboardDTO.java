@@ -25,5 +25,6 @@ public class StudDashboardDTO {
 		}
 		public void setInstructorCount(int instructorCount) {
 			this.instructorCount = instructorCount;
-		}
+		} 
+		
 	}

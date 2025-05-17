@@ -31,5 +31,4 @@ public class StudentDto {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
 }

@@ -14,5 +14,4 @@ public class CourseEnrollmentReportDto {
 	private String courseTitle;
 	private String instructorName;
 	private Long totalEnrollments; 
-	
 }

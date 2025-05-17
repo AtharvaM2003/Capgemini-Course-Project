@@ -8,11 +8,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor 
 @RequiredArgsConstructor
 public class Top5CoursesDto {
 
 	    private String courseTitle;
 	    private Long totalEnrollments;
-
+ 
+	    
 }

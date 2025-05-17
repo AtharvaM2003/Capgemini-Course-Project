@@ -323,6 +323,7 @@ function getAuthorization() {
     const decoded = decodeJWT(token);
     return `Bearer ${token}`;
 }
+ 
 
 function logout() {
     localStorage.removeItem("token");

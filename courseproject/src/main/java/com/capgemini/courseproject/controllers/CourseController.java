@@ -113,10 +113,8 @@ public class CourseController {
 	
 	@GetMapping("/findTop5Courses")
 	public ResponseEntity<List<Top5CoursesDto>> findTop5Courses(){
-		List<Top5CoursesDto> top5Courses=courseService.findTop5Courses();
+		List<Top5CoursesDto> top5Courses =courseService.findTop5Courses();
 		return ResponseEntity.status(HttpStatus.OK).body(top5Courses);
 	}
- 
-	
-}
 
+}

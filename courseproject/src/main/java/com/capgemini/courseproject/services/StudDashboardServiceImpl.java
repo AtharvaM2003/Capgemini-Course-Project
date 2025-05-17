@@ -32,6 +32,5 @@ public class StudDashboardServiceImpl implements StudDashboardService{
         dto.setUserCount( userRepository.findAllStudents().size());
         dto.setInstructorCount((int) instructorRepository.count());
         return dto; 
-        
     }
 }
