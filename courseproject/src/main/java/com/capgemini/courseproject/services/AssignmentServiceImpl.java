@@ -1,7 +1,10 @@
 package com.capgemini.courseproject.services;
 
+import com.capgemini.courseproject.dto.AssignmentDto;
 import com.capgemini.courseproject.entities.Assignment;
+import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.repositories.AssignmentRepository;
+import com.capgemini.courseproject.repositories.CourseRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,18 +19,30 @@ import java.util.Optional;
 public class AssignmentServiceImpl implements AssignmentService {
 
 	private AssignmentRepository assignmentRepository;
+	private CourseRepository courseRepository;
 
 	@Autowired
-	public void setAssignmentService(AssignmentRepository assignmentRepository) {
+	public void setAssignmentService(AssignmentRepository assignmentRepository, CourseRepository courseRepository) {
 		this.assignmentRepository = assignmentRepository;
+		this.courseRepository = courseRepository;
 	}
-	
-
 
 	@Override
-	public Assignment createAssignment(Assignment assignment) {
-		log.debug("Creating new Assignment to Repository");
-		return assignmentRepository.save(assignment);
+	public AssignmentDto addAssignment(AssignmentDto dto) {
+		Course course = courseRepository.findById(dto.getCourseId())
+				.orElseThrow(() -> new RuntimeException("Course not found"));
+
+		Assignment assignment = new Assignment();
+		assignment.setTitle(dto.getTitle());
+		assignment.setDescription(dto.getDescription());
+		assignment.setCourse(course);
+
+		Assignment savedAssignment = assignmentRepository.save(assignment);
+
+		AssignmentDto responseDto = new AssignmentDto(savedAssignment.getAssignmentId(), savedAssignment.getTitle(),
+				savedAssignment.getDescription(), course.getCourseId(), course.getTitle());
+
+		return responseDto;
 	}
 
 	@Override
@@ -37,9 +52,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 	}
 
 	@Override
-	public List<Assignment> getAllAssignments() {
-		log.debug("Fetching all assignments from the repository");
-		return assignmentRepository.findAll();
+	public List<AssignmentDto> getAllAssignments() {
+		return assignmentRepository.findAllAssignmentDtos();
 	}
 
 }

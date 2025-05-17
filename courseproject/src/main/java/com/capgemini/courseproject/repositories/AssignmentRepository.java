@@ -12,5 +12,11 @@ import java.util.List;
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	List<Assignment> findByCourse_CourseId(Long courseId);
 	
+	 @Query("SELECT new com.capgemini.courseproject.dto.AssignmentDto(" +
+	           "a.assignmentId, a.title, a.description, c.courseId, c.title) " +
+	           "FROM Assignment a JOIN a.course c")
+	    List<AssignmentDto> findAllAssignmentDtos();
+	 
+	 
 
 }
