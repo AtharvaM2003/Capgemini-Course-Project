@@ -207,6 +207,54 @@ function renderStudentDashboardCharts() {
         });
 }
 
+function renderTop5CoursesChart() {
+    const top5CoursesUrl = "http://localhost:8080/api/courses/findTop5Courses";
+
+    fetch(top5CoursesUrl, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": getAuthorization()
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        const labels = data.map(course => course.courseTitle);
+        const values = data.map(course => course.totalEnrollment); 
+        const colors = getRandomColors(labels.length);
+
+        const ctx = document.getElementById('top5CoursesChart')?.getContext('2d');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Enrollments',
+                        data: values,
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error("Error loading top 5 courses chart:", error);
+    });
+}
+
+
 function redirectToLogin() {
     const currentPath = window.location.pathname;
     if (!currentPath.includes("login.html")) {

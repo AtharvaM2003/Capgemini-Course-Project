@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
+import com.capgemini.courseproject.dto.Top5CoursesDto;
 import com.capgemini.courseproject.entities.Course;
 
 @Repository
@@ -34,5 +35,14 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 	List<CourseDto> getAllCourses();
 
     long count();
-
+    
+    @Query(value = """
+		    SELECT c.title AS courseTitle, COUNT(e.courseid) AS totalEnrollments
+		    FROM enrollment e
+		    JOIN course c ON e.courseid = c.id
+		    GROUP BY c.title
+		    ORDER BY totalEnrollments DESC
+		    LIMIT 5
+		""", nativeQuery = true)
+		List<Top5CoursesDto> findTop5Courses();
 }

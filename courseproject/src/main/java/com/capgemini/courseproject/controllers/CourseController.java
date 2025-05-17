@@ -2,6 +2,8 @@ package com.capgemini.courseproject.controllers;
 
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
+import com.capgemini.courseproject.dto.CourseEnrollmentReportDto;
+import com.capgemini.courseproject.dto.Top5CoursesDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.services.CourseService;
@@ -107,6 +109,12 @@ public class CourseController {
 	@GetMapping("/instructor/{instructorId}")
 	public List<String> getCourseTitlesByInstructor(@PathVariable Long instructorId) {
 		return courseService.getCourseTitlesByInstructorId(instructorId);
+	}
+	
+	@GetMapping("/findTop5Courses")
+	public ResponseEntity<List<Top5CoursesDto>> findTop5Courses(){
+		List<Top5CoursesDto> top5Courses=courseService.findTop5Courses();
+		return ResponseEntity.status(HttpStatus.OK).body(top5Courses);
 	}
 
 }

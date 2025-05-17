@@ -2,6 +2,7 @@ package com.capgemini.courseproject.services;
 
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
+import com.capgemini.courseproject.dto.Top5CoursesDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.exceptions.CourseNotFoundException;
@@ -89,14 +90,19 @@ public class CourseServiceImple implements CourseService {
 	}
 
 	@Override
-
 	public List<CourseEnrollmentDto> getCourseEnrollmentReport() {
 
 		return courseRepository.getCourseEnrollmentReport();
 	}
 
+	@Override
 	public List<String> getCourseTitlesByInstructorId(Long instructorId) {
 		return courseRepository.findCourseTitlesByInstructorId(instructorId);
+	}
+	
+	@Override
+	public List<Top5CoursesDto> findTop5Courses() {
+		return courseRepository.findTop5Courses();
 	}
 
 }
