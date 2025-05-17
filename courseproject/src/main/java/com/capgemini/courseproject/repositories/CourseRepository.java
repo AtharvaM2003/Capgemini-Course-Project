@@ -29,7 +29,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
 	
     @Query("SELECT new com.capgemini.courseproject.dto.CourseDto("
-            + "c.id, c.title, c.description, c.instructor.id, c.instructor.name, c.fees) "
+            + "c.courseId, c.title, c.description, c.instructor.instructorId, c.instructor.name, c.fees) "
             + "FROM Course c")
 	List<CourseDto> getAllCourses();
 

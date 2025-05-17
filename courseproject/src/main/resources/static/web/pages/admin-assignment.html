@@ -1,0 +1,196 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#" onclick="loadPage('admin-dashboard.html')">Management</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Assignments</li>
+    </ol>
+</nav>
+
+<h2 class="mb-3">Assignment Management</h2>
+
+<div class="mb-3">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">
+        <i class="fa fa-plus me-1"></i> Add New Assignment
+    </button>
+</div>
+
+<div class="table-responsive">
+    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search Assignments...">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th onclick="sortTable('assignment_id')">Assignment ID</th>
+                <th onclick="sortTable('title')">Title</th>
+                <th onclick="sortTable('description')">Description</th>
+                <th onclick="sortTable('course_id')">Course ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="assignmentTableBody"></tbody>
+    </table>
+</div>
+
+<!-- Add/Edit Assignment Modal -->
+<div class="modal fade" id="addAssignmentModal" tabindex="-1" aria-labelledby="addAssignmentModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="assignmentForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAssignmentModalLabel">Add Assignment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="assignmentTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="assignmentTitle" required>
+                        <div class="invalid-feedback">At least 5 characters required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assignmentDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="assignmentDescription" rows="3" required></textarea>
+                        <div class="invalid-feedback">At least 10 characters required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseIdInput" class="form-label">Course ID</label>
+                        <input type="number" class="form-control" id="courseIdInput" required>
+                        <div class="invalid-feedback">Course ID is required.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="submitBtn" class="btn btn-success">Add Assignment</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    (() => {
+        document.addEventListener("DOMContentLoaded", () => {
+            const apiUrl = "http://localhost:8080/api";
+            const assignmentForm = document.getElementById("assignmentForm");
+            const titleInput = document.getElementById("assignmentTitle");
+            const descriptionInput = document.getElementById("assignmentDescription");
+            const courseIdInput = document.getElementById("courseIdInput");
+            const submitBtn = document.getElementById("submitBtn");
+            const searchInput = document.getElementById("searchInput");
+            let editId = null;
+            let assignments = [];
+
+            function fetchAssignments() {
+                fetch(`${apiUrl}/assignments`)
+                    .then(res => res.json())
+                    .then(data => {
+                        assignments = data;
+                        renderAssignments(data);
+                    });
+            }
+
+            function renderAssignments(data) {
+                const tbody = document.getElementById("assignmentTableBody");
+                tbody.innerHTML = "";
+                data.forEach(assignment => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                <td>${assignment.assignment_id}</td>
+                <td>${assignment.title}</td>
+                <td>${assignment.description}</td>
+                <td>${assignment.course}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm me-1" onclick="loadAssignment(${assignment.assignment_id})">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+            `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            assignmentForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const newAssignment = {
+                    title: titleInput.value.trim(),
+                    description: descriptionInput.value.trim(),
+                    course_id: courseIdInput.value.trim()
+                };
+
+                if (editId) {
+                    updateAssignment(editId, newAssignment);
+                } else {
+                    addAssignment(newAssignment);
+                }
+            });
+
+            function addAssignment(data) {
+                fetch(`${apiUrl}/assignments`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }).then(() => {
+                    fetchAssignments();
+                    closeModal();
+                });
+            }
+
+            function updateAssignment(id, data) {
+                fetch(`${apiUrl}/assignments/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }).then(() => {
+                    fetchAssignments();
+                    closeModal();
+                });
+            }
+
+            window.loadAssignment = function (id) {
+                fetch(`${apiUrl}/assignments/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        titleInput.value = data.title;
+                        descriptionInput.value = data.description;
+                        courseIdInput.value = data.course_id;
+                        editId = id;
+                        submitBtn.textContent = "Update Assignment";
+                        const modal = new bootstrap.Modal(document.getElementById("addAssignmentModal"));
+                        modal.show();
+                    });
+            };
+
+            searchInput.addEventListener("input", () => {
+                const term = searchInput.value.toLowerCase();
+                const filtered = assignments.filter(a =>
+                    a.title.toLowerCase().includes(term) ||
+                    a.description.toLowerCase().includes(term)
+                );
+                renderAssignments(filtered);
+            });
+
+            window.sortTable = function (field) {
+                assignments.sort((a, b) => a[field] > b[field] ? 1 : -1);
+                renderAssignments(assignments);
+            };
+
+            function closeModal() {
+                const modal = bootstrap.Modal.getInstance(document.getElementById("addAssignmentModal"));
+                modal.hide();
+                assignmentForm.reset();
+                submitBtn.textContent = "Add Assignment";
+                editId = null;
+            }
+
+            fetchAssignments();
+        });
+
+
+
+    })
+</script>

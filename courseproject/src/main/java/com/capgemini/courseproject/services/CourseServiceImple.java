@@ -48,6 +48,7 @@ public class CourseServiceImple implements CourseService {
 			existingCourse.setTitle(updatedCourse.getTitle());
 			existingCourse.setDescription(updatedCourse.getDescription());
 			existingCourse.setInstructor(updatedCourse.getInstructor());
+			existingCourse.setFees(updatedCourse.getFees());
 
 			log.debug("Course updated successfully: {}", existingCourse);
 			return courseRepository.save(existingCourse);

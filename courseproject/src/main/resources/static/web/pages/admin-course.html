@@ -58,7 +58,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="courseFee" class="form-label">Fee (₹)</label>
-                        <input type="number" class="form-control" id="courseFee" required>
+                        <input type="text" class="form-control" id="courseFee" required>
                         <div class="invalid-feedback">Enter Valid Fee</div>
                     </div>
                 </div>
@@ -70,10 +70,10 @@
         </div>
     </div>
 </div>
-
 <script>
     (() => {
         let editId = null;
+
         let sortDirection = 1;
         let allCourses = [];
         let instructorMap = {};
@@ -85,11 +85,100 @@
         const instructorInput = document.getElementById("instructorInput");
         const feeInput = document.getElementById("courseFee");
         const submitBtn = document.getElementById("submit");
+        let searchInput = document.createElement("input");
 
-        // Fetch instructors
+        // Validations
+        function validateCourseName() {
+            let isValid = true;
+            if (titleInput.value.trim().length < 5) {
+                titleInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                titleInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        function validateCourseDesc() {
+            let isValid = true;
+            if (descriptionInput.value.trim().length < 10) {
+                descriptionInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                descriptionInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        function validateInstructor() {
+            let isValid = true;
+            if (!instructorInput.value) {
+                instructorInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                instructorInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        function validateFees() {
+            let isValid = true;
+            if (!feeInput.value || parseInt(feeInput.value) <= 0) {
+                feeInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                feeInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        // Sorting
+        document.querySelector("th:nth-child(2)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(2)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => a.title.localeCompare(b.title) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        document.querySelector("th:nth-child(3)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(3)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => a.description.localeCompare(b.description) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        document.querySelector("th:nth-child(4)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(4)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => a.instructorName.localeCompare(b.instructorName) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        document.querySelector("th:nth-child(5)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(5)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => ((a.fees) - (b.fees)) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        // Searching
+        searchInput.setAttribute("type", "text");
+        searchInput.setAttribute("placeholder", "Search Courses...");
+        searchInput.classList.add("form-control", "mb-3");
+        document.querySelector(".table").parentNode.insertBefore(searchInput, document.querySelector(".table"));
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filtered = allCourses.filter(c => c.title.toLowerCase().includes(searchTerm) ||
+                c.description.toLowerCase().includes(searchTerm) ||
+                String(c.fees).toLowerCase().includes(String(searchTerm))
+            );
+            renderCourses(filtered);
+        });
+
+        // Load instructors
         function loadInstructors() {
             fetch(`${apiUrl}/instructors`, {
-                method: 'GET',
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": getAuthorization()
@@ -97,19 +186,20 @@
             })
                 .then(res => res.json())
                 .then(data => {
-                    instructorInput.innerHTML = '<option value="">--Select--</option>';
+                    const instSelect = document.getElementById("instructorInput");
+                    instSelect.innerHTML = '<option value="">--Select--</option>';
                     data.forEach(inst => {
-                        instructorInput.innerHTML += `<option value="${inst.id}">${inst.name}</option>`;
-                        instructorMap[inst.id] = inst.name;
+                        instSelect.innerHTML += `<option value="${inst.instructorId}">${inst.name}</option>`;
+                        instructorMap[inst.instructorId] = inst.name;
                     });
                 });
         }
         loadInstructors();
 
-        // Fetch and render courses
+        // Fetch courses
         function fetchAndRenderCourses() {
             fetch(`${apiUrl}/courses`, {
-                method: 'GET',
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": getAuthorization()
@@ -122,22 +212,24 @@
                 });
         }
 
+        // Render courses
         function renderCourses(courses) {
             const tbody = document.getElementById("courseTableBody");
             tbody.innerHTML = "";
 
-            courses.forEach(course => {
+            courses.forEach(cour => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${course.courseId}</td>
-                    <td>${course.title}</td>
-                    <td>${course.description}</td>
-                    <td>${course.instructorName}</td>
-                    <td>${course.fees}</td>
+                    <td>${cour.courseId}</td>
+                    <td>${cour.title}</td>
+                    <td>${cour.description}</td>
+                    <td>${cour.instructorName}</td>
+                    <td>${cour.fees}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning me-1" data-id="${course.courseId}">
+                        <button class="btn btn-sm btn-warning me-1" data-id="${cour.courseId}">
                             <i class="fa fa-edit"></i>
                         </button>
+                 
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -149,14 +241,16 @@
                     loadCourseForEdit(id);
                 });
             });
+
+
         }
 
         fetchAndRenderCourses();
 
-        // Form submission
+        // Add or Edit course
         courseForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            if (validateForm()) {
+            if (validateCourseName() & validateCourseDesc() & validateInstructor() & validateFees()) {
                 if (editId) {
                     updateCourse();
                 } else {
@@ -165,50 +259,13 @@
             }
         });
 
-        function validateForm() {
-            let isValid = true;
-
-            if (titleInput.value.trim().length < 5) {
-                titleInput.classList.add("is-invalid");
-                isValid = false;
-            } else {
-                titleInput.classList.remove("is-invalid");
-            }
-
-            if (descriptionInput.value.trim().length < 10) {
-                descriptionInput.classList.add("is-invalid");
-                isValid = false;
-            } else {
-                descriptionInput.classList.remove("is-invalid");
-            }
-
-            if (!instructorInput.value) {
-                instructorInput.classList.add("is-invalid");
-                isValid = false;
-            } else {
-                instructorInput.classList.remove("is-invalid");
-            }
-
-            if (!feeInput.value || parseInt(feeInput.value) <= 0) {
-                feeInput.classList.add("is-invalid");
-                isValid = false;
-            } else {
-                feeInput.classList.remove("is-invalid");
-            }
-
-            return isValid;
-        }
-
         function addCourse() {
             const newCourse = {
                 title: titleInput.value.trim(),
                 description: descriptionInput.value.trim(),
-                fees: parseFloat(feeInput.value.trim()), // Ensuring numeric value
-                instructor: {
-                    instructorId: parseInt(instructorInput.value, 10)
-                }
+                instructor: { instructorId: instructorInput.value },
+                fees: parseFloat(feeInput.value.trim())
             };
-
 
             fetch(`${apiUrl}/courses`, {
                 method: 'POST',
@@ -219,8 +276,10 @@
                 body: JSON.stringify(newCourse)
             }).then(() => {
                 courseForm.reset();
+                clearValidation();
                 closeModal();
                 fetchAndRenderCourses();
+
             });
         }
 
@@ -228,21 +287,21 @@
             const updatedCourse = {
                 title: titleInput.value.trim(),
                 description: descriptionInput.value.trim(),
-                instructor: {
-                    instructorId: parseInt(instructorInput.value, 10)
-                },
-                fees: parseFloat(feeInput.value.trim())
+                fees: parseFloat(feeInput.value.trim()),
+                instructor: { instructorId: instructorInput.value }
+
             };
 
             fetch(`${apiUrl}/courses/${editId}`, {
-                method: 'PUT',
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": getAuthorization()
                 },
-                body: JSON.stringify(updatedCourse)
+                body: JSON.stringify({ ...updatedCourse, id: editId })
             }).then(() => {
                 courseForm.reset();
+                clearValidation();
                 closeModal();
                 submitBtn.textContent = "Add Course";
                 editId = null;
@@ -250,31 +309,44 @@
             });
         }
 
+
+
+        function clearValidation() {
+            titleInput.classList.remove("is-invalid", "is-valid");
+            descriptionInput.classList.remove("is-invalid", "is-valid");
+            instructorInput.classList.remove("is-invalid", "is-valid");
+            feeInput.classList.remove("is-invalid", "is-valid");
+        }
         function loadCourseForEdit(id) {
             fetch(`${apiUrl}/courses/${id}`, {
-                method: 'GET',
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": getAuthorization()
                 },
             })
-                .then(res => res.json())
+                .then(response => response.json())
                 .then(data => {
                     titleInput.value = data.title;
                     descriptionInput.value = data.description;
-                    instructorInput.value = data.instructorId;
                     feeInput.value = data.fees;
+                    instructorInput.value = data.instructor.instructorId; // Add this line
 
                     editId = id;
                     submitBtn.textContent = "Update Course";
-                    new bootstrap.Modal(document.getElementById('addCourseModal')).show();
+                    const myModal = new bootstrap.Modal(document.getElementById('addCourseModal'));
+                    myModal.show();
                 });
         }
-
         function closeModal() {
-            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('addCourseModal'));
-            if (modalInstance) modalInstance.hide();
+            const modalElement = document.getElementById('addCourseModal');
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (!modalInstance) {
+                modalInstance = new bootstrap.Modal(modalElement);
+            }
+            modalInstance.hide();
             courseForm.reset();
+            clearValidation();
         }
     })();
 </script>
