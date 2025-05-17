@@ -34,6 +34,15 @@ public class UserController {
 		log.debug("Returning {} users", userList.size());
 		return ResponseEntity.status(HttpStatus.OK).body(userList);
 	}
+	
+	@GetMapping("/allStudents")
+    public ResponseEntity<List<User>> getAllStudents() {
+		log.info("GET /api/allStudents - Request received to fetch all student");
+        List<User> students = userService.findAllStudents();
+        log.info("GET /api/allStudents - Request received to fetch all students");
+        return new ResponseEntity<>(students, HttpStatus.OK);
+    }
+	
 
 	@GetMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -67,6 +76,8 @@ public class UserController {
 		log.debug("User with ID {} updated: {}", id, updatedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
 	}
+	
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
