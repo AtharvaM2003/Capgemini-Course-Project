@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
 import com.capgemini.courseproject.controllers.AssignmentController;
+import com.capgemini.courseproject.dto.AssignmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.services.AssignmentService;
 
@@ -22,77 +23,89 @@ import java.util.Optional;
 
 class AssignmentControllerTest {
 
-    @Mock
-    private AssignmentService assignmentService;
+	@Mock
+	private AssignmentService assignmentService;
 
-    @Mock
-  
-    private BindingResult bindingResult;
+	@Mock
+	private BindingResult bindingResult;
 
-    @InjectMocks
-    private AssignmentController assignmentController;
+	@InjectMocks
+	private AssignmentController assignmentController;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    void testGetAllAssignments() {
-        Assignment a1 = new Assignment();
-        a1.setAssignmentId(1L);
-        a1.setTitle("Assignment 1");
-        a1.setDescription("Desc 1");
+	@Test
+	void testGetAllAssignments() {
+		AssignmentDto a1 = new AssignmentDto();
+		a1.setAssignmentId(1L);
+		a1.setTitle("Assignment 1");
+		a1.setDescription("Desc 1");
 
-        Assignment a2 = new Assignment();
-        a2.setAssignmentId(2L);
-        a2.setTitle("Assignment 2");
-        a2.setDescription("Desc 2");
+		AssignmentDto a2 = new AssignmentDto();
+		a2.setAssignmentId(2L);
+		a2.setTitle("Assignment 2");
+		a2.setDescription("Desc 2");
 
-        when(assignmentService.getAllAssignments()).thenReturn(Arrays.asList(a1, a2));
+		when(assignmentService.getAllAssignments()).thenReturn(Arrays.asList(a1, a2));
 
-        ResponseEntity<List<Assignment>> response = assignmentController.getAllAssignments();
+		ResponseEntity<List<AssignmentDto>> response = assignmentController.getAllAssignments();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(2);
-        assertThat(response.getBody().get(0).getTitle()).isEqualTo("Assignment 1");
-    }
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).hasSize(2);
+		assertThat(response.getBody().get(0).getTitle()).isEqualTo("Assignment 1");
+	}
 
-    @Test
-    void testGetAssignmentById() {
-        Assignment assignment = new Assignment();
-        assignment.setAssignmentId(1L);
-        assignment.setTitle("Assignment X");
+	@Test
+	void testGetAssignmentByIdFound() {
+		Assignment assignment = new Assignment();
+		assignment.setAssignmentId(1L);
+		assignment.setTitle("Assignment X");
 
-        when(assignmentService.getAssignmentById(1L)).thenReturn(Optional.of(assignment));
+		when(assignmentService.getAssignmentById(1L)).thenReturn(Optional.of(assignment));
 
-        ResponseEntity<Assignment> response = assignmentController.getAssignmentById(1L);
+		ResponseEntity<Assignment> response = assignmentController.getAssignmentById(1L);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getAssignmentId()).isEqualTo(1L);
-        assertThat(response.getBody().getTitle()).isEqualTo("Assignment X");
-    }
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().getAssignmentId()).isEqualTo(1L);
+		assertThat(response.getBody().getTitle()).isEqualTo("Assignment X");
+	}
 
-    @Test
-    void testCreateAssignment() {
-        Assignment input = new Assignment();
-        input.setTitle("New Assignment");
-        input.setDescription("New Description");
+	@Test
+	void testGetAssignmentByIdNotFound() {
+		when(assignmentService.getAssignmentById(99L)).thenReturn(Optional.empty());
 
-        Assignment saved = new Assignment();
-        saved.setAssignmentId(10L);
-        saved.setTitle("New Assignment");
-        saved.setDescription("New Description");
+		ResponseEntity<Assignment> response = assignmentController.getAssignmentById(99L);
 
-        when(bindingResult.hasErrors()).thenReturn(false);
-        when(assignmentService.createAssignment(any(Assignment.class))).thenReturn(saved);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		assertThat(response.getBody()).isNull();
+	}
 
-        ResponseEntity<Assignment> response = assignmentController.createAssignment(input, bindingResult);
+	@Test
+	void testCreateAssignmentValid() {
+	    AssignmentDto input = new AssignmentDto();
+	    input.setTitle("New Assignment");
+	    input.setDescription("New Description");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getAssignmentId()).isEqualTo(10L);
-    }
+	    AssignmentDto saved = new AssignmentDto();
+	    saved.setAssignmentId(10L);
+	    saved.setTitle("New Assignment");
+	    saved.setDescription("New Description");
+	    when(bindingResult.hasErrors()).thenReturn(false);
+	    when(assignmentService.addAssignment(any(AssignmentDto.class))).thenReturn(saved);
+
+	    ResponseEntity<AssignmentDto> response = assignmentController.addAssignment(input, bindingResult);
+
+	    verify(bindingResult).hasErrors();
+	    verify(assignmentService).addAssignment(any(AssignmentDto.class));
+
+	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+	    assertThat(response.getBody()).isNotNull();
+	    assertThat(response.getBody().getAssignmentId()).isEqualTo(10L);
+	}
 
 }
+

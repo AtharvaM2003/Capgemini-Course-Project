@@ -1,6 +1,7 @@
 package com.capgemini.courseproject.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
@@ -15,6 +16,7 @@ public class Enrollment {
 	private Long enrollmentId;
 
 	@Column(name = "enrollment_date")
+	@PastOrPresent(message = "Future Date not allowed")
 	private LocalDate enrollmentDate;
 
 	@ManyToOne

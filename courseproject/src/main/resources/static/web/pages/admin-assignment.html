@@ -1,0 +1,436 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="#" onclick="loadPage('admin-dashboard.html')">Management</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Assignments</li>
+  </ol>
+</nav>
+
+<h2 class="mb-3">Assignment Management</h2>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">
+    <i class="fa fa-plus me-1"></i> Add New Assignment
+  </button>
+  <div class="search-container" style="width: 300px">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search assignments..." />
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Assignment ID</th>
+        <th>Title <i class="fa fa-sort ms-1"></i></th>
+        <th>Description <i class="fa fa-sort ms-1"></i></th>
+        <th>Course <i class="fa fa-sort ms-1"></i></th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="assignmentTableBody"></tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="addAssignmentModal" tabindex="-1" aria-labelledby="addAssignmentModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="assignmentForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAssignmentModalLabel">
+            Add Assignment
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="assignmentTitle" class="form-label">Title*</label>
+            <input type="text" class="form-control" id="assignmentTitle" required minlength="5" />
+            <div class="invalid-feedback">
+              Title must be at least 5 characters long.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="assignmentDescription" class="form-label">Description*</label>
+            <textarea class="form-control" id="assignmentDescription" rows="3" required minlength="10"></textarea>
+            <div class="invalid-feedback">
+              Description must be at least 10 characters long.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="courseSelect" class="form-label">Course*</label>
+            <select class="form-select" id="courseSelect" required>
+              <option value="">--Select Course--</option>
+            </select>
+            <div class="invalid-feedback">Please select a course.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="submitBtn" class="btn btn-success">
+            <span id="submitBtnText">Add Assignment</span>
+            <span id="submitBtnSpinner" class="spinner-border spinner-border-sm d-none" role="status"
+              aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header bg-success text-white">
+      <strong class="me-auto">Success</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body"></div>
+  </div>
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header bg-danger text-white">
+      <strong class="me-auto">Error</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body"></div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    let editId = null;
+    let sortDirection = 1;
+    let allAssignments = [];
+    let courseMap = {};
+
+    const apiUrl = "http://localhost:8080/api";
+    const courapiUrl = "http://localhost:8080/api";
+    const assignmentForm = document.getElementById("assignmentForm");
+    const titleInput = document.getElementById("assignmentTitle");
+    const descriptionInput = document.getElementById("assignmentDescription");
+    const courseSelect = document.getElementById("courseSelect");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitBtnText = document.getElementById("submitBtnText");
+    const submitBtnSpinner = document.getElementById("submitBtnSpinner");
+    const searchInput = document.getElementById("searchInput");
+    const successToast = new bootstrap.Toast(
+      document.getElementById("successToast")
+    );
+    const errorToast = new bootstrap.Toast(
+      document.getElementById("errorToast")
+    );
+
+    function init() {
+      loadCourses();
+      fetchAndRenderAssignments();
+      setupEventListeners();
+    }
+
+    function setupEventListeners() {
+      assignmentForm.addEventListener("submit", handleFormSubmit);
+
+      searchInput.addEventListener("input", handleSearch);
+
+      document.querySelectorAll("thead th").forEach((th, index) => {
+        if (index > 0 && index < 4) {
+          th.style.cursor = "pointer";
+          th.addEventListener("click", () => sortTable(index));
+        }
+      });
+
+      document
+        .getElementById("addAssignmentModal")
+        .addEventListener("hidden.bs.modal", () => {
+          assignmentForm.reset();
+          clearValidation();
+          editId = null;
+          submitBtnText.textContent = "Add Assignment";
+        });
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      if (validateForm()) {
+        if (editId) {
+          updateAssignment();
+        } else {
+          addAssignment();
+        }
+      }
+    }
+
+    function validateForm() {
+      let isValid = true;
+
+      if (titleInput.value.trim().length < 5) {
+        titleInput.classList.add("is-invalid");
+        isValid = false;
+      } else {
+        titleInput.classList.remove("is-invalid");
+      }
+
+      if (descriptionInput.value.trim().length < 10) {
+        descriptionInput.classList.add("is-invalid");
+        isValid = false;
+      } else {
+        descriptionInput.classList.remove("is-invalid");
+      }
+
+      if (!courseSelect.value) {
+        courseSelect.classList.add("is-invalid");
+        isValid = false;
+      } else {
+        courseSelect.classList.remove("is-invalid");
+      }
+
+      return isValid;
+    }
+
+    function clearValidation() {
+      titleInput.classList.remove("is-invalid", "is-valid");
+      descriptionInput.classList.remove("is-invalid", "is-valid");
+      courseSelect.classList.remove("is-invalid", "is-valid");
+    }
+
+    function loadCourses() {
+      fetch(`${courapiUrl}/courses`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+      })
+        .then(handleResponse)
+        .then((data) => {
+          courseSelect.innerHTML =
+            '<option value="">--Select Course--</option>';
+          data.forEach((course) => {
+            courseSelect.innerHTML += `<option value="${course.courseId}">${course.title}</option>`;
+            courseMap[course.courseId] = course.title;
+          });
+        })
+        .catch(handleError);
+    }
+
+    function fetchAndRenderAssignments() {
+      fetch(`${apiUrl}/assignments`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+      })
+        .then(handleResponse)
+        .then((data) => {
+          allAssignments = data;
+          renderAssignments(data);
+        })
+        .catch(handleError);
+    }
+
+    function renderAssignments(assignments) {
+      const tbody = document.getElementById("assignmentTableBody");
+      tbody.innerHTML = "";
+
+      if (assignments.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">No assignments found</td></tr>`;
+        return;
+      }
+
+      assignments.forEach((assignment) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${assignment.assignmentId}</td>
+            <td>${assignment.title}</td>
+            <td>${assignment.description}</td>
+            <td>${assignment.courseName}</td>
+            <td>
+              <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${assignment.assignmentId}">
+                <i class="fa fa-edit"></i> Edit
+              </button>
+            </td>
+          `;
+        tbody.appendChild(row);
+      });
+
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const id = e.currentTarget.getAttribute("data-id");
+          loadAssignmentForEdit(id);
+        });
+      });
+
+    }
+
+    function handleSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filtered = allAssignments.filter(
+        (assignment) =>
+          assignment.title.toLowerCase().includes(searchTerm) ||
+          assignment.description.toLowerCase().includes(searchTerm) ||
+          assignment.courseName.toLowerCase().includes(searchTerm) ||
+          String(assignment.assignmentId).includes(searchTerm)
+      );
+      renderAssignments(filtered);
+    }
+
+    function sortTable(columnIndex) {
+      const sorted = [...allAssignments].sort((a, b) => {
+        let comparison = 0;
+
+        switch (columnIndex) {
+          case 1: 
+            comparison = a.title.localeCompare(b.title);
+            break;
+          case 2: 
+            comparison = a.description.localeCompare(b.description);
+            break;
+          case 3:
+            comparison = a.courseName.localeCompare(b.courseName);
+            break;
+        }
+
+        return comparison * sortDirection;
+      });
+
+      sortDirection *= -1;
+      renderAssignments(sorted);
+    }
+
+    function addAssignment() {
+      const selectedCourseId = parseInt(courseSelect.value);
+      const selectedCourseName = courseMap[selectedCourseId];
+
+      const newAssignment = {
+        title: titleInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        courseId: selectedCourseId,
+      };
+
+      toggleSubmitButton(true);
+
+      fetch(`${apiUrl}/assignments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+        body: JSON.stringify(newAssignment),
+      })
+        .then(handleResponse)
+        .then(() => {
+          showToast("Assignment added successfully", "success");
+          closeModal();
+          fetchAndRenderAssignments();
+        })
+        .catch(handleError)
+        .finally(() => toggleSubmitButton(false));
+    }
+
+    function loadAssignmentForEdit(id) {
+      fetch(`${apiUrl}/assignments/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+      })
+        .then(handleResponse)
+        .then((assignment) => {
+          titleInput.value = assignment.title;
+          descriptionInput.value = assignment.description;
+          courseSelect.value = assignment.courseId;
+
+          editId = assignment.assignmentId;
+          submitBtnText.textContent = "Update Assignment";
+
+          const modal = new bootstrap.Modal(
+            document.getElementById("addAssignmentModal")
+          );
+          modal.show();
+        })
+        .catch(handleError);
+    }
+
+    function updateAssignment() {
+      const selectedCourseId = parseInt(courseSelect.value);
+      const selectedCourseName = courseMap[selectedCourseId];
+
+      const updatedAssignment = {
+        assignmentId: editId,
+        title: titleInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        courseId: selectedCourseId,
+        courseName: selectedCourseName,
+      };
+
+      toggleSubmitButton(true);
+
+      fetch(`${apiUrl}/assignments/${editId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+        body: JSON.stringify(updatedAssignment),
+      })
+        .then(handleResponse)
+        .then(() => {
+          showToast("Assignment updated successfully", "success");
+          closeModal();
+          fetchAndRenderAssignments();
+        })
+        .catch(handleError)
+        .finally(() => toggleSubmitButton(false));
+    }
+
+    function toggleSubmitButton(isLoading) {
+      if (isLoading) {
+        submitBtn.disabled = true;
+        submitBtnSpinner.classList.remove("d-none");
+      } else {
+        submitBtn.disabled = false;
+        submitBtnSpinner.classList.add("d-none");
+      }
+    }
+
+    function closeModal() {
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("addAssignmentModal")
+      );
+      modal.hide();
+    }
+
+    function showToast(message, type) {
+      const toast = type === "success" ? successToast : errorToast;
+      const toastBody = document.querySelector(`#${type}Toast .toast-body`);
+
+      toastBody.textContent = message;
+      toast.show();
+    }
+
+    function handleResponse(response) {
+      if (!response.ok) {
+        return response.json().then((err) => {
+          throw new Error(err.message || "Something went wrong");
+        });
+      }
+      return response.json();
+    }
+
+    function handleError(error) {
+      console.error("Error:", error);
+      showToast(error.message || "An error occurred", "error");
+      toggleSubmitButton(false);
+    } 
+    
+
+    init();
+  })();
+</script>

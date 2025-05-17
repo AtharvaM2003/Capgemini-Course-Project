@@ -44,12 +44,11 @@ public class Course {
 	private List<Assignment> assignments = new ArrayList<>();
 
 	public Course() {
-		super();
+		
 	}
 
 	public Course(Long courseId, String title, String description, Instructor instructor, List<Enrollment> enrollments,
 			List<Assignment> assignments, Double fees) {
-		super();
 		this.courseId = courseId;
 		this.title = title;
 		this.description = description;

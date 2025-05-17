@@ -1,0 +1,378 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#" onclick="loadPage('admin-dashboard.html')">Management</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Students</li>
+    </ol>
+</nav>
+
+<h2 class="mb-3">Student Master</h2>
+<div class="mb-3">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal" data-id="chbtn">
+        <i class="fa fa-plus me-1"></i> Add Student
+    </button>
+</div>
+<div class="mb-3">
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle" id="table">
+        <thead class="table-light">
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="studentTableBody">
+
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="studentForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="mb-3">
+                        <label for="studentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="studentName" required>
+                        <div class="invalid-feedback">Enter Valid Length </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="studentEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="studentEmail" required>
+                        <div class="invalid-feedback">Enter Valid Email </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="studentPhone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="studentPhone" required>
+                        <div class="invalid-feedback">Enter Valid Phone Number </div>
+                    </div>
+
+                    <div class="mb-3" style="position: relative;">
+                        <label for="studentPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="studentPassword" required>
+                        <i id="togglePassword" class="fa-solid fa-eye"
+                            style="position: absolute; top: 60%; right: 15px;  cursor: pointer; ">
+                        </i>
+                        <div class="invalid-feedback">Enter Valid Password </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="submitBtn">Save Student</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>(() => {
+    let allStudents = [];
+    let editId = null;
+    let sortDirection = 1;
+
+    const apiUrl = "http://localhost:8080/api";
+    const form = document.getElementById("studentForm");
+    const studentNameInput = document.getElementById("studentName");
+    const studentEmailInput = document.getElementById("studentEmail");
+    const studentPhoneInput = document.getElementById("studentPhone");
+    const studentPassInput = document.getElementById("studentPassword");
+    const submitBtn = document.getElementById("submitBtn");
+    const togglePassword = document.getElementById('togglePassword');
+    
+    // Show/Hide Password
+    togglePassword.addEventListener('click', function () {
+        const type = studentPassInput.type === 'password' ? 'text' : 'password';
+        studentPassInput.type = type;
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // Sorting by Name
+    document.querySelector("th:nth-child(2)").style.cursor = "pointer";
+    document.querySelector("th:nth-child(2)").addEventListener("click", () => {
+        const sorted = [...allStudents].sort((a, b) => a.name.localeCompare(b.name) * sortDirection);
+        sortDirection *= -1;
+        renderStudents(sorted);
+    });
+
+    // Sorting by Email
+    document.querySelector("th:nth-child(3)").style.cursor = "pointer";
+    document.querySelector("th:nth-child(3)").addEventListener("click", () => {
+        const sorted = [...allStudents].sort((a, b) => a.email.localeCompare(b.email) * sortDirection);
+        sortDirection *= -1;
+        renderStudents(sorted);
+    });
+
+    // Sorting by Phone
+    document.querySelector("th:nth-child(4)").style.cursor = "pointer";
+    document.querySelector("th:nth-child(4)").addEventListener("click", () => {
+        const sorted = [...allStudents].sort((a, b) => (a.phone - b.phone) * sortDirection);
+        sortDirection *= -1;
+        renderStudents(sorted);
+    });
+
+    // Search Input
+    const searchInput = document.createElement("input");
+    searchInput.setAttribute("type", "text");
+    searchInput.setAttribute("placeholder", "Search by Students...");
+    searchInput.classList.add("form-control", "mb-3");
+    document.querySelector(".table").parentNode.insertBefore(searchInput, document.querySelector(".table"));
+
+    searchInput.addEventListener("input", () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filtered = allStudents.filter(c =>
+            c.name.toLowerCase().includes(searchTerm) ||
+            c.email.toLowerCase().includes(searchTerm) ||
+            String(c.phone).includes(searchTerm)
+        );
+        renderStudents(filtered);
+    });
+
+    // Fetch Students
+    function fetchAndRenderStudent() {
+        fetch(`${apiUrl}/users/allStudents`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": getAuthorization()
+            },
+        })
+            .then(res => res.json())
+            .then(users => {
+                allStudents = users;
+                renderStudents(allStudents);
+            });
+    }
+
+    // Render Students in Table
+    function renderStudents(students) {
+        const tbody = document.getElementById("studentTableBody");
+        tbody.innerHTML = "";
+
+        students.forEach(stud => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${stud.userId}</td>
+                <td>${stud.userName}</td>
+                <td>${stud.email}</td>
+                <td>${stud.phone}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-1" data-id="${stud.userId}"><i class="fa fa-edit"></i></button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        document.querySelectorAll(".btn-warning").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-id");
+                loadStudentForEdit(id);
+            });
+        });
+
+        document.querySelectorAll(".btn-danger").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-id");
+                deleteStudent(id);
+            });
+        });
+    }
+
+    fetchAndRenderStudent();
+
+    // Store the original password when editing
+    let originalPassword = "";
+
+    // Load Student Data into Form for Edit
+    function loadStudentForEdit(id) {
+        fetch(`${apiUrl}/users/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": getAuthorization()
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                studentNameInput.value = data.userName;
+                studentEmailInput.value = data.email;
+                studentPhoneInput.value = data.phone;
+                
+                // Store the original password but show placeholder for security
+                originalPassword = data.password;
+                studentPassInput.value = "••••••••";
+                
+                // Mark this as being in edit mode
+                editId = id;
+                submitBtn.textContent = "Update Student";
+                
+                // Disable password field when editing
+                studentPassInput.disabled = true;
+                
+                // Update modal title
+                document.getElementById('addStudentModalLabel').textContent = "Edit Student";
+
+                const myModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+                myModal.show();
+            });
+    }
+
+    // Add/Edit Student
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const student = {
+            userName: studentNameInput.value.trim(),
+            email: studentEmailInput.value.trim(),
+            phone: studentPhoneInput.value.trim(),
+            userType: "USER"
+        };
+        
+        // If editing, use the original password
+        if (editId) {
+            student.password = originalPassword;
+        } else {
+            // Only for new student, use the input password
+            student.password = studentPassInput.value.trim();
+        }
+
+        // Validate differently based on whether we're editing or adding
+        if (editId) {
+            // When editing, only validate name, email and phone
+            if (validateStudentName() & validateMobile() & validateEmail()) {
+                submitStudentData(student);
+            }
+        } else {
+            // When adding new, validate all fields including password
+            if (validateStudentName() & validateMobile() & validateEmail() & validatePassword()) {
+                submitStudentData(student);
+            }
+        }
+    });
+
+    // Submit student data to API
+    function submitStudentData(student) {
+        const method = editId ? "PUT" : "POST";
+        const url = editId ? `${apiUrl}/users/${editId}` : `http://localhost:8080/auth/register`;
+
+        fetch(url, {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": getAuthorization()
+            },
+            body: JSON.stringify(student)
+        }).then(() => {
+            clearValidation();
+            fetchAndRenderStudent();
+            editId = null;
+            originalPassword = "";
+            submitBtn.textContent = "Save Student";
+            document.getElementById('addStudentModalLabel').textContent = "Add Student";
+            studentPassInput.disabled = false;
+            //studentEmailInput.disabled = false;
+            
+            closeModal();
+        });
+    }
+
+    // Clear Validation Styles
+    function clearValidation() {
+        studentNameInput.classList.remove("is-invalid", "is-valid");
+        studentEmailInput.classList.remove("is-invalid", "is-valid");
+        studentPhoneInput.classList.remove("is-invalid", "is-valid");
+        studentPassInput.classList.remove("is-invalid", "is-valid");
+    }
+
+    // Validations
+    function validateStudentName() {
+        if (studentNameInput.value.trim().length >= 5) {
+            studentNameInput.classList.add("is-valid");
+            studentNameInput.classList.remove("is-invalid");
+            return true;
+        } else {
+            studentNameInput.classList.add("is-invalid");
+            studentNameInput.classList.remove("is-valid");
+            return false;
+        }
+    }
+
+    function validatePassword() {
+        const pass = studentPassInput.value.trim();
+        // Fixed regex - the dot was missing escape character
+        const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+        if (passRegex.test(pass)) {
+            studentPassInput.classList.add("is-valid");
+            studentPassInput.classList.remove("is-invalid");
+            return true;
+        } else {
+            studentPassInput.classList.add("is-invalid");
+            studentPassInput.classList.remove("is-valid");
+            return false;
+        }
+    }
+
+    function validateEmail() {
+        if (studentEmailInput.value && studentEmailInput.checkValidity()) {
+            studentEmailInput.classList.add("is-valid");
+            studentEmailInput.classList.remove("is-invalid");
+            return true;
+        } else {
+            studentEmailInput.classList.add("is-invalid");
+            studentEmailInput.classList.remove("is-valid");
+            return false;
+        }
+    }
+
+    function validateMobile() {
+        const mobileRegex = /^[789]\d{9}$/;
+        if (mobileRegex.test(studentPhoneInput.value.trim())) {
+            studentPhoneInput.classList.add("is-valid");
+            studentPhoneInput.classList.remove("is-invalid");
+            return true;
+        } else {
+            studentPhoneInput.classList.add("is-invalid");
+            studentPhoneInput.classList.remove("is-valid");
+            return false;
+        }
+    }
+
+    // Reset the form when opening the modal for a new student
+    document.querySelector('[data-id="chbtn"]').addEventListener('click', function() {
+        form.reset();
+        clearValidation();
+        editId = null;
+        originalPassword = "";
+        submitBtn.textContent = "Save Student";
+        document.getElementById('addStudentModalLabel').textContent = "Add Student";
+        studentPassInput.disabled = false;
+    });
+
+    // Close Modal
+    function closeModal() {
+        const modalElement = document.getElementById('addStudentModal');
+        let modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (!modalInstance) {
+            modalInstance = new bootstrap.Modal(modalElement);
+        }
+        modalInstance.hide();
+        form.reset();
+        clearValidation();
+    }
+})();
+</script>

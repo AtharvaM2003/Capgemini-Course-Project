@@ -1,0 +1,352 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#" onclick="loadPage('admin-dashboard.html')">Management</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Courses</li>
+    </ol>
+</nav>
+
+<h2 class="mb-3">Course Master</h2>
+
+<div class="mb-3">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+        <i class="fa fa-plus me-1"></i> Add New Course
+    </button>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Course ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Instructor</th>
+                <th>Fee (₹)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="courseTableBody"></tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="courseForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCourseModalLabel">Add New Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="courseTitle" class="form-label">Course Title</label>
+                        <input type="text" class="form-control" id="courseTitle" required>
+                        <div class="invalid-feedback">At least 5 characters required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="courseDescription" rows="3" required></textarea>
+                        <div class="invalid-feedback">At least 10 characters required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="instructorInput" class="form-label">Instructor</label>
+                        <select class="form-select" id="instructorInput" required>
+                            <option value="">--Select--</option>
+                        </select>
+                        <div class="invalid-feedback">Select Option</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseFee" class="form-label">Fee (₹)</label>
+                        <input type="text" class="form-control" id="courseFee" required>
+                        <div class="invalid-feedback">Enter Valid Fee</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="submit" class="btn btn-success">Add Course</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    (() => {
+        let editId = null;
+
+        let sortDirection = 1;
+        let allCourses = [];
+        let instructorMap = {};
+
+        const apiUrl = "http://localhost:8080/api";
+        const courseForm = document.getElementById("courseForm");
+        const titleInput = document.getElementById("courseTitle");
+        const descriptionInput = document.getElementById("courseDescription");
+        const instructorInput = document.getElementById("instructorInput");
+        const feeInput = document.getElementById("courseFee");
+        const submitBtn = document.getElementById("submit");
+        let searchInput = document.createElement("input");
+
+        // Validations
+        function validateCourseName() {
+            let isValid = true;
+            if (titleInput.value.trim().length < 5) {
+                titleInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                titleInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        function validateCourseDesc() {
+            let isValid = true;
+            if (descriptionInput.value.trim().length < 10) {
+                descriptionInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                descriptionInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        function validateInstructor() {
+            let isValid = true;
+            if (!instructorInput.value) {
+                instructorInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                instructorInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        function validateFees() {
+            let isValid = true;
+            if (!feeInput.value || parseInt(feeInput.value) <= 0) {
+                feeInput.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                feeInput.classList.remove("is-invalid");
+            }
+            return isValid;
+        }
+
+        // Sorting
+        document.querySelector("th:nth-child(2)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(2)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => a.title.localeCompare(b.title) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        document.querySelector("th:nth-child(3)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(3)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => a.description.localeCompare(b.description) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        document.querySelector("th:nth-child(4)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(4)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => a.instructorName.localeCompare(b.instructorName) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        document.querySelector("th:nth-child(5)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(5)").addEventListener("click", () => {
+            const sorted = [...allCourses].sort((a, b) => ((a.fees) - (b.fees)) * sortDirection);
+            sortDirection *= -1;
+            renderCourses(sorted);
+        });
+
+        // Searching
+        searchInput.setAttribute("type", "text");
+        searchInput.setAttribute("placeholder", "Search Courses...");
+        searchInput.classList.add("form-control", "mb-3");
+        document.querySelector(".table").parentNode.insertBefore(searchInput, document.querySelector(".table"));
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filtered = allCourses.filter(c => c.title.toLowerCase().includes(searchTerm) ||
+                c.description.toLowerCase().includes(searchTerm) ||
+                String(c.fees).toLowerCase().includes(String(searchTerm))
+            );
+            renderCourses(filtered);
+        });
+
+        // Load instructors
+        function loadInstructors() {
+            fetch(`${apiUrl}/instructors`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const instSelect = document.getElementById("instructorInput");
+                    instSelect.innerHTML = '<option value="">--Select--</option>';
+                    data.forEach(inst => {
+                        instSelect.innerHTML += `<option value="${inst.instructorId}">${inst.name}</option>`;
+                        instructorMap[inst.instructorId] = inst.name;
+                    });
+                });
+        }
+        loadInstructors();
+
+        // Fetch courses
+        function fetchAndRenderCourses() {
+            fetch(`${apiUrl}/courses`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    allCourses = data;
+                    renderCourses(data);
+                });
+        }
+
+        // Render courses
+        function renderCourses(courses) {
+            const tbody = document.getElementById("courseTableBody");
+            tbody.innerHTML = "";
+
+            courses.forEach(cour => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${cour.courseId}</td>
+                    <td>${cour.title}</td>
+                    <td>${cour.description}</td>
+                    <td>${cour.instructorName}</td>
+                    <td>${cour.fees}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" data-id="${cour.courseId}">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                 
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.querySelectorAll(".btn-warning").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-id");
+                    loadCourseForEdit(id);
+                });
+            });
+
+
+        }
+
+        fetchAndRenderCourses();
+
+        // Add or Edit course
+        courseForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (validateCourseName() & validateCourseDesc() & validateInstructor() & validateFees()) {
+                if (editId) {
+                    updateCourse();
+                } else {
+                    addCourse();
+                }
+            }
+        });
+
+        function addCourse() {
+            const newCourse = {
+                title: titleInput.value.trim(),
+                description: descriptionInput.value.trim(),
+                instructor: { instructorId: instructorInput.value },
+                fees: parseFloat(feeInput.value.trim())
+            };
+
+            fetch(`${apiUrl}/courses`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+                body: JSON.stringify(newCourse)
+            }).then(() => {
+                courseForm.reset();
+                clearValidation();
+                closeModal();
+                fetchAndRenderCourses();
+
+            });
+        }
+
+        function updateCourse() {
+            const updatedCourse = {
+                title: titleInput.value.trim(),
+                description: descriptionInput.value.trim(),
+                fees: parseFloat(feeInput.value.trim()),
+                instructor: { instructorId: instructorInput.value }
+
+            };
+
+            fetch(`${apiUrl}/courses/${editId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+                body: JSON.stringify({ ...updatedCourse, id: editId })
+            }).then(() => {
+                courseForm.reset();
+                clearValidation();
+                closeModal();
+                submitBtn.textContent = "Add Course";
+                editId = null;
+                fetchAndRenderCourses();
+            });
+        }
+
+
+
+        function clearValidation() {
+            titleInput.classList.remove("is-invalid", "is-valid");
+            descriptionInput.classList.remove("is-invalid", "is-valid");
+            instructorInput.classList.remove("is-invalid", "is-valid");
+            feeInput.classList.remove("is-invalid", "is-valid");
+        }
+        function loadCourseForEdit(id) {
+            fetch(`${apiUrl}/courses/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    titleInput.value = data.title;
+                    descriptionInput.value = data.description;
+                    feeInput.value = data.fees;
+                    instructorInput.value = data.instructor.instructorId; // Add this line
+
+                    editId = id;
+                    submitBtn.textContent = "Update Course";
+                    const myModal = new bootstrap.Modal(document.getElementById('addCourseModal'));
+                    myModal.show();
+                });
+        }
+        function closeModal() {
+            const modalElement = document.getElementById('addCourseModal');
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (!modalInstance) {
+                modalInstance = new bootstrap.Modal(modalElement);
+            }
+            modalInstance.hide();
+            courseForm.reset();
+            clearValidation();
+        }
+    })();
+</script>

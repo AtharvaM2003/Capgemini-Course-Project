@@ -1,5 +1,6 @@
 package com.capgemini.courseproject.services;
 
+import com.capgemini.courseproject.dto.StudentDto;
 import com.capgemini.courseproject.entities.User;
 import java.util.List;
 
@@ -18,4 +19,9 @@ public interface UserService {
 
 	User findByEmail(String email);
 
+	List<StudentDto> fetchStudentOfCourses(Long id);
+
+	List<StudentDto> fetchAllStudentsNames();
+
+	List<User> findAllStudents();
 }

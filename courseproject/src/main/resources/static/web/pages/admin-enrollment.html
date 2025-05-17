@@ -1,0 +1,110 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#" onclick="loadPage('admin-dashboard.html')">Reports</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Enrollment Report</li>
+    </ol>
+</nav>
+
+<h2 class="mb-3">Enrollment Report</h2>
+
+<div class="mb-3">
+    <input type="text" id="enrollmentSearch" class="form-control mb-3"
+        placeholder="Search by Course or Student Name...">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Enrollment ID</th>
+                <th>Course Name</th>
+                <th>Student Name</th>
+                <th>Date of Enrollment</th>
+            </tr>
+        </thead>
+        <tbody id="enrollmentBody"></tbody>
+    </table>
+</div>
+
+<script>
+(() => {
+    const apiUrl = "http://localhost:8080/api";
+    const enrollUrl = `${apiUrl}/enrollments/enrollment-report`; 
+    const tbody = document.getElementById("enrollmentBody");
+    const searchInput = document.getElementById("enrollmentSearch");
+    let allEnrollments = [];
+    let sortDirection = 1;
+
+ 
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        const filtered = allEnrollments.filter(enroll =>
+            enroll.courseTitle.toLowerCase().includes(query) ||
+            enroll.studentName.toLowerCase().includes(query) ||
+            enroll.enrollmentDate.toLowerCase().includes(query)
+        );
+        renderEnrollments(filtered);
+    });
+
+    
+    ["th:nth-child(2)", "th:nth-child(3)", "th:nth-child(4)"].forEach((selector, index) => {
+        const th = document.querySelector(selector);
+        th.style.cursor = "pointer";
+        th.addEventListener("click", () => {
+            const key = ["courseTitle", "studentName", "enrollmentDate"][index];
+            const sorted = [...allEnrollments].sort((a, b) =>
+                a[key].localeCompare(b[key]) * sortDirection
+            );
+            sortDirection *= -1;
+            renderEnrollments(sorted);
+        });
+    });
+
+   
+    async function fetchEnrollments() {
+    try {
+        const res = await fetch(enrollUrl, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": getAuthorization()
+            }
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log("Fetched enrollments:", data); 
+
+        if (!Array.isArray(data)) {
+            throw new Error("Response is not an array");
+        }
+
+        allEnrollments = data;
+        renderEnrollments(allEnrollments);
+    } catch (err) {
+        console.error("Error fetching enrollments:", err);
+    }
+}
+
+
+    function renderEnrollments(enrollments) {
+        tbody.innerHTML = "";
+        enrollments.forEach(enroll => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${enroll.enrollmentId}</td>
+                <td>${enroll.courseTitle}</td>
+                <td>${enroll.studentName}</td>
+                <td>${enroll.enrollmentDate}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    fetchEnrollments();
+})();
+</script>

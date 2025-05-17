@@ -10,4 +10,5 @@ public interface SubmissionService {
 
 	Submission findSubmissionById(Long submissionId);
 
+	Submission createSubmission(Submission submission);
 }

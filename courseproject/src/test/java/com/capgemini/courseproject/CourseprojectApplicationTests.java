@@ -8,6 +8,9 @@ class CourseprojectApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
+		
+		throw new UnsupportedOperationException("Not implemented cannot be performed");
 	}
 
 }

@@ -1,7 +1,10 @@
 package com.capgemini.courseproject.controllers;
 
+import com.capgemini.courseproject.dto.AssignmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.services.AssignmentService;
+import com.sun.net.httpserver.Authenticator.Result;
+
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,49 +22,60 @@ import java.util.Optional;
 @Slf4j
 public class AssignmentController {
 
-    private final AssignmentService assignmentService;
+	private final AssignmentService assignmentService;
 
-    @Autowired
-    public AssignmentController(AssignmentService assignmentService) {
-        this.assignmentService = assignmentService;
-    }
+	@Autowired
+	public AssignmentController(AssignmentService assignmentService) {
+		this.assignmentService = assignmentService;
+	}
 
-    @GetMapping 
-    public ResponseEntity<List<Assignment>> getAllAssignments() {
-    	log.info("GET /api/assignments -Request received to fetch all assignments");
-    	List<Assignment> assignmentList = assignmentService.getAllAssignments();
-    	 log.debug("Returning {} assignments",assignmentList.size());
-        return ResponseEntity.status(HttpStatus.OK).body(assignmentList);
-       
-    }
+	@GetMapping
+	public ResponseEntity<List<AssignmentDto>> getAllAssignments() {
+		log.info("GET /api/assignments - Request received to fetch all assignments");
+		List<AssignmentDto> assignmentList = assignmentService.getAllAssignments();
+		log.debug("Returning {} assignments", assignmentList.size());
+		return ResponseEntity.status(HttpStatus.OK).body(assignmentList);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Assignment> getAssignmentById(@PathVariable Long id) {
-    	log.info("GET /api/assignments/{} -Request fetching assignment by id",id);
-    	Optional<Assignment> assignment = assignmentService.getAssignmentById(id);
-    	if(assignment.isPresent()) {
-    		log.debug("Assignment found!!",assignment.get());
-    	}else {
-    		log.warn("Assignment not found!!",id);
-    	}
-    	return assignment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<Assignment> getAssignmentById(@PathVariable Long id) {
+		log.info("GET /api/assignments/{} -Request fetching assignment by id", id);
+		Optional<Assignment> assignment = assignmentService.getAssignmentById(id);
+		if (assignment.isPresent()) {
+			log.debug("Assignment found!!", assignment.get());
+		} else {
+			log.warn("Assignment not found!!", id);
+		}
+		return assignment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	}
 
+	@PostMapping
+	public ResponseEntity<AssignmentDto> addAssignment(@RequestBody AssignmentDto assignmentDto,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException(bindingResult.getFieldErrors().toString());
+		}
+		AssignmentDto createdAssignment = assignmentService.addAssignment(assignmentDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdAssignment);
+	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id, @Valid @RequestBody Assignment updatedAssignment,
+			BindingResult result) {
+		if (result.hasErrors()) {
 
+			throw new IllegalArgumentException(result.getFieldErrors().toString());
+		}
+		log.info("PUT /api/assignments/{} - Updating assignment", id);
+		Assignment assignment = assignmentService.updateAssignment(id, updatedAssignment);
+		if (assignment != null) {
+			log.debug("Updated assignment: {}", assignment);
+			return ResponseEntity.ok(assignment);
+		} else {
+			log.warn("Failed to update assignment with ID {} - not found", id);
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    @PostMapping
-    public ResponseEntity<Assignment> createAssignment(@Valid @RequestBody Assignment assignment, BindingResult result) {
-    	if(result.hasErrors()) {
-    		throw new IllegalArgumentException(result.getFieldErrors().toString());
-    	}
-
-    	log.info("POST /api/assignments -Adding a new assignmets: {}",assignment.getTitle());
-    	Assignment savedAssignment = assignmentService.createAssignment(assignment);
-    	log.debug("created assignment details: {}",savedAssignment);
-        
-        return ResponseEntity.ok(savedAssignment);
-    }
-
-    
+	
 }
-

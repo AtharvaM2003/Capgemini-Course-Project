@@ -38,7 +38,7 @@ class UserControllerTest {
 	@Test
 	void testGetUserById() {
 		Long userId = 1L;
-		User mockUser = new User(userId, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
+		User mockUser = new User(userId, "Alice", "alice@gmail.com", "pass123", "9876543210", "student");
 
 		when(userService.findUserById(userId)).thenReturn(mockUser);
 
@@ -52,8 +52,8 @@ class UserControllerTest {
 
 	@Test
 	void testCreateUser() {
-		User inputUser = new User(null, "Bob", "bob@gmail.com", "pass456", "9876500000", "student", null, null);
-		User savedUser = new User(2L, "Bob", "bob@gmail.com", "pass456", "9876500000", "student", null, null);
+		User inputUser = new User(null, "Bob", "bob@gmail.com", "pass456", "9876500000", "student");
+		User savedUser = new User(2L, "Bob", "bob@gmail.com", "pass456", "9876500000", "student");
 
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(userService.createUser(any(User.class))).thenReturn(savedUser);
@@ -67,8 +67,8 @@ class UserControllerTest {
 
 	@Test
 	void testGetAllUsers() {
-		User u1 = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student", null, null);
-		User u2 = new User(2L, "Bob", "bob@gmail.com", "pass456", "9876500000", "student", null, null);
+		User u1 = new User(1L, "Alice", "alice@gmail.com", "pass123", "9876543210", "student");
+		User u2 = new User(2L, "Bob", "bob@gmail.com", "pass456", "9876500000", "student");
 
 		List<User> userList = Arrays.asList(u1, u2);
 
@@ -83,7 +83,7 @@ class UserControllerTest {
 	@Test
 	void testUpdateUser() {
 		Long id = 1L;
-		User updated = new User(id, "Updated", "updated@gmail.com", "pass", "9999999999", "student", null, null);
+		User updated = new User(id, "Updated", "updated@gmail.com", "pass", "9999999999", "student");
 
 		when(userService.updateUser(eq(id), any(User.class))).thenReturn(updated);
 

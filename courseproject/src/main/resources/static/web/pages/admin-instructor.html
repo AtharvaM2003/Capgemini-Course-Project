@@ -1,0 +1,247 @@
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#"
+			onclick="loadPage('admin-dashboard.html')">Management</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Instructors</li>
+	</ol>
+</nav>
+
+<h2 class="mb-3">Instructor Master</h2>
+
+<div class="mb-3">
+	<button class="btn btn-primary" data-bs-toggle="modal"
+		data-bs-target="#addInstructorModal" id="chbtn">
+		<i class="fa fa-plus me-1"></i> Add Instructor
+	</button>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-bordered align-middle">
+		<thead class="table-light">
+			<tr>
+				<th>Instructor ID</th>
+				<th>Name</th>
+				<th>Expertise</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody id="instructorTableBody"></tbody>
+	</table>
+</div>
+
+<div class="modal fade" id="addInstructorModal" tabindex="-1"
+	aria-labelledby="addInstructorModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="instructorForm" novalidate>
+				<div class="modal-header">
+					<h5 class="modal-title" id="addInstructorModalLabel">Add
+						Instructor</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="instructorName" class="form-label">Name</label> <input
+							type="text" class="form-control" id="instructorName" required>
+						<div class="invalid-feedback">Invalid Name Length</div>
+					</div>
+					<div class="mb-3">
+						<label for="expertise" class="form-label">Expertise</label> <input
+							type="text" class="form-control" id="expertise" required>
+						<div class="invalid-feedback">Invalid Expertise Length</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="submitBtn" class="btn btn-success">Save
+						Instructor</button>
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+    (() => {
+        const apiUrl = "http://localhost:8080/api/instructors";
+        const nameInput = document.getElementById("instructorName");
+        const expertiseInput = document.getElementById("expertise");
+        const submitBtn = document.getElementById("submitBtn");
+        const form = document.getElementById("instructorForm");
+        const searchInput = document.createElement("input");
+        const chbtn = document.getElementById("chbtn");
+
+        let editId = null;
+        let sortDirection = 1;
+        let allInstructors = [];
+
+        // Add search bar
+        searchInput.type = "text";
+        searchInput.placeholder = "Search by Instructor Name...";
+        searchInput.classList.add("form-control", "mb-3");
+        document.querySelector(".table").parentNode.insertBefore(searchInput, document.querySelector(".table"));
+
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filtered = allInstructors.filter(inst =>
+                inst.name.toLowerCase().includes(searchTerm) ||
+                inst.expertise.toLowerCase().includes(searchTerm)
+            );
+            renderInstructors(filtered);
+        });
+
+        function validateName() {
+            const valid = nameInput.value.trim().length >= 5;
+            nameInput.classList.toggle("is-valid", valid);
+            nameInput.classList.toggle("is-invalid", !valid);
+            return valid;
+        }
+
+        function validateExpertise() {
+            const valid = expertiseInput.value.trim().length >= 5;
+            expertiseInput.classList.toggle("is-valid", valid);
+            expertiseInput.classList.toggle("is-invalid", !valid);
+            return valid;
+        }
+
+        function clearValidation() {
+            nameInput.classList.remove("is-valid", "is-invalid");
+            expertiseInput.classList.remove("is-valid", "is-invalid");
+        }
+
+        function closeModal() {
+            const modalElement = document.getElementById('addInstructorModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modalInstance.hide();
+            form.reset();
+            clearValidation();
+            editId = null;
+            submitBtn.textContent = "Save Instructor";
+        }
+
+        // Sorting
+        document.querySelector("th:nth-child(1)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(1)").addEventListener("click", () => {
+            const sorted = [...allInstructors].sort((a, b) => (a.id - b.id) * sortDirection);
+            sortDirection *= -1;
+            renderInstructors(sorted);
+        });
+
+        document.querySelector("th:nth-child(2)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(2)").addEventListener("click", () => {
+            const sorted = [...allInstructors].sort((a, b) => a.name.localeCompare(b.name) * sortDirection);
+            sortDirection *= -1;
+            renderInstructors(sorted);
+        });
+
+        document.querySelector("th:nth-child(3)").style.cursor = "pointer";
+        document.querySelector("th:nth-child(3)").addEventListener("click", () => {
+            const sorted = [...allInstructors].sort((a, b) => a.expertise.localeCompare(b.expertise) * sortDirection);
+            sortDirection *= -1;
+            renderInstructors(sorted);
+        });
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (!validateName() | !validateExpertise()) return;
+
+            const instructor = {
+                name: nameInput.value.trim(),
+                expertise: expertiseInput.value.trim()
+            };
+
+            if (editId) {
+                fetch(`${apiUrl}/${editId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getAuthorization()
+                    },
+                    body: JSON.stringify(instructor)
+                }).then(() => {
+                    fetchAndRenderInstructors();
+                    closeModal();
+                });
+            } else {
+                fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getAuthorization()
+                    },
+                    body: JSON.stringify(instructor)
+                }).then(() => {
+                    fetchAndRenderInstructors();
+                    closeModal();
+                });
+            }
+        });
+
+       
+
+        function loadInstructorForEdit(id) {
+            fetch(`${apiUrl}/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    nameInput.value = data.name;
+                    expertiseInput.value = data.expertise;
+                    editId = id;
+                    submitBtn.textContent = "Update Instructor";
+                    new bootstrap.Modal(document.getElementById('addInstructorModal')).show();
+                });
+        }
+
+        function fetchAndRenderInstructors() {
+            fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": getAuthorization()
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    allInstructors = data;
+                    renderInstructors(data);
+                });
+        }
+
+        function renderInstructors(instructors) {
+            const tbody = document.getElementById("instructorTableBody");
+            tbody.innerHTML = "";
+
+            instructors.forEach(inst => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                <td>${inst.instructorId}</td>
+                <td>${inst.name}</td>
+                <td>${inst.expertise}</td>
+                <td>
+                <button class="btn btn-sm btn-warning me-1" style="min-width: 80px;" data-id="${inst.instructorId}">
+                <i class="fa fa-edit"></i>
+                </button>             
+                </td>
+            `;
+                tbody.appendChild(row);
+            });
+
+            document.querySelectorAll(".btn-warning").forEach(btn => {
+                btn.addEventListener("click", () => loadInstructorForEdit(btn.getAttribute("data-id")));
+            });
+
+            document.querySelectorAll(".btn-danger").forEach(btn => {
+                btn.addEventListener("click", () => deleteInstructor(btn.getAttribute("data-id")));
+            });
+        }
+
+        fetchAndRenderInstructors();
+    })();
+</script>

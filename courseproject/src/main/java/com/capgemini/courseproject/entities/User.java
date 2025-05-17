@@ -55,8 +55,7 @@ public class User {
 		super();
 	}
 
-	public User(Long userId, String userName, String email, String password, String phone, String userType,
-			List<Enrollment> enrollments, List<Submission> submissions) {
+	public User(Long userId, String userName, String email, String password, String phone, String userType) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -64,8 +63,7 @@ public class User {
 		this.password = password;
 		this.phone = phone;
 		this.userType = userType;
-		this.enrollments = enrollments;
-		this.submissions = submissions;
+		
 	}
 
 	public Long getUserId() {

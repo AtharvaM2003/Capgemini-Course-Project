@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
+import com.capgemini.courseproject.dto.CourseInfoDto;
+
+import com.capgemini.courseproject.dto.EnrollmentReportDTO;
 
 import com.capgemini.courseproject.entities.Enrollment;
 import com.capgemini.courseproject.services.EnrollmentService;
@@ -62,6 +68,12 @@ public class EnrollmentController {
 
 	}
 
+	@GetMapping("/course/{id}")
+	public ResponseEntity<List<CourseInfoDto>> findCoursesByStudentId(@PathVariable Long id) {
+		List<CourseInfoDto> studentCourse = enrollmentService.findCoursesByStudentId(id);
+		return ResponseEntity.status(HttpStatus.OK).body(studentCourse);
+	}	
+
 	@GetMapping("/{enrollmentId}")
 	public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable Long enrollmentId) {
 
@@ -73,5 +85,16 @@ public class EnrollmentController {
 		return enrollment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 
 	}
+	
+	@GetMapping("/enrollment-report")
+	public ResponseEntity<List<EnrollmentReportDTO>> getEnrollmentReport() {
+		
+		log.info("Fetching enrollment report");
+	    List<EnrollmentReportDTO> report = enrollmentService.getEnrollmentReport();
+	    
+	    log.debug("Enrollment report size is {}:", report.size());
+	    return ResponseEntity.ok(report);  
+	}
+
 
 }
