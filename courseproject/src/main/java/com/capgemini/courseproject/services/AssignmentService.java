@@ -11,5 +11,7 @@ public interface AssignmentService {
 	Optional<Assignment> getAssignmentById(Long assignmentId);
 
 	List<AssignmentDto> getAllAssignments();
+	
+	Assignment updateAssignment(Long assignmentId, Assignment updatedAssignment);
 
 }

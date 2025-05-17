@@ -45,7 +45,6 @@ public class Assignment {
 	}
 
 	public Assignment() {
-		super();
 	}
 
 	public Long getAssignmentId() {
@@ -90,8 +89,8 @@ public class Assignment {
 
 	@Override
 	public String toString() {
-		return "Assignment [assignmentId=" + assignmentId + ", course=" + course + ", title=" + title + ", description="
-				+ description + ", submissions=" + submissions + "]";
+		return "Assignment [assignmentId=" + assignmentId + ", title=" + title + ", description="
+				+ description +  "]";
 	}
 
 }

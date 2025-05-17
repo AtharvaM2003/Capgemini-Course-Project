@@ -10,20 +10,11 @@
 <h2 class="mb-3">Assignment Management</h2>
 
 <div class="mb-3 d-flex justify-content-between align-items-center">
-  <button
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#addAssignmentModal"
-  >
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">
     <i class="fa fa-plus me-1"></i> Add New Assignment
   </button>
   <div class="search-container" style="width: 300px">
-    <input
-      type="text"
-      id="searchInput"
-      class="form-control"
-      placeholder="Search assignments..."
-    />
+    <input type="text" id="searchInput" class="form-control" placeholder="Search assignments..." />
   </div>
 </div>
 
@@ -42,13 +33,8 @@
   </table>
 </div>
 
-<div
-  class="modal fade"
-  id="addAssignmentModal"
-  tabindex="-1"
-  aria-labelledby="addAssignmentModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="addAssignmentModal" tabindex="-1" aria-labelledby="addAssignmentModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form id="assignmentForm" novalidate>
@@ -56,38 +42,19 @@
           <h5 class="modal-title" id="addAssignmentModalLabel">
             Add Assignment
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label for="assignmentTitle" class="form-label">Title*</label>
-            <input
-              type="text"
-              class="form-control"
-              id="assignmentTitle"
-              required
-              minlength="5"
-            />
+            <input type="text" class="form-control" id="assignmentTitle" required minlength="5" />
             <div class="invalid-feedback">
               Title must be at least 5 characters long.
             </div>
           </div>
           <div class="mb-3">
-            <label for="assignmentDescription" class="form-label"
-              >Description*</label
-            >
-            <textarea
-              class="form-control"
-              id="assignmentDescription"
-              rows="3"
-              required
-              minlength="10"
-            ></textarea>
+            <label for="assignmentDescription" class="form-label">Description*</label>
+            <textarea class="form-control" id="assignmentDescription" rows="3" required minlength="10"></textarea>
             <div class="invalid-feedback">
               Description must be at least 10 characters long.
             </div>
@@ -103,18 +70,10 @@
         <div class="modal-footer">
           <button type="submit" id="submitBtn" class="btn btn-success">
             <span id="submitBtnText">Add Assignment</span>
-            <span
-              id="submitBtnSpinner"
-              class="spinner-border spinner-border-sm d-none"
-              role="status"
-              aria-hidden="true"
-            ></span>
+            <span id="submitBtnSpinner" class="spinner-border spinner-border-sm d-none" role="status"
+              aria-hidden="true"></span>
           </button>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancel
           </button>
         </div>
@@ -124,42 +83,20 @@
 </div>
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div
-    id="successToast"
-    class="toast"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-  >
+  <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header bg-success text-white">
       <strong class="me-auto">Success</strong>
-      <button
-        type="button"
-        class="btn-close btn-close-white"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body"></div>
   </div>
 </div>
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div
-    id="errorToast"
-    class="toast"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-  >
+  <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header bg-danger text-white">
       <strong class="me-auto">Error</strong>
-      <button
-        type="button"
-        class="btn-close btn-close-white"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body"></div>
   </div>
@@ -317,9 +254,6 @@
               <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${assignment.assignmentId}">
                 <i class="fa fa-edit"></i> Edit
               </button>
-              <button class="btn btn-sm btn-danger delete-btn" data-id="${assignment.assignmentId}">
-                <i class="fa fa-trash"></i> Delete
-              </button>
             </td>
           `;
         tbody.appendChild(row);
@@ -332,12 +266,6 @@
         });
       });
 
-      document.querySelectorAll(".delete-btn").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          const id = e.currentTarget.getAttribute("data-id");
-          deleteAssignment(id);
-        });
-      });
     }
 
     function handleSearch() {
@@ -357,13 +285,13 @@
         let comparison = 0;
 
         switch (columnIndex) {
-          case 1: // Title
+          case 1: 
             comparison = a.title.localeCompare(b.title);
             break;
-          case 2: // Description
+          case 2: 
             comparison = a.description.localeCompare(b.description);
             break;
-          case 3: // Course
+          case 3:
             comparison = a.courseName.localeCompare(b.courseName);
             break;
         }
@@ -445,7 +373,7 @@
       toggleSubmitButton(true);
 
       fetch(`${apiUrl}/assignments/${editId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: getAuthorization(),
@@ -460,24 +388,6 @@
         })
         .catch(handleError)
         .finally(() => toggleSubmitButton(false));
-    }
-
-    function deleteAssignment(id) {
-      if (!confirm("Are you sure you want to delete this assignment?")) return;
-
-      fetch(`${apiUrl}/assignments/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getAuthorization(),
-        },
-      })
-        .then(handleResponse)
-        .then(() => {
-          showToast("Assignment deleted successfully", "success");
-          fetchAndRenderAssignments();
-        })
-        .catch(handleError);
     }
 
     function toggleSubmitButton(isLoading) {
