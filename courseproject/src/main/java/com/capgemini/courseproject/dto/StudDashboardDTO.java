@@ -10,7 +10,8 @@ public class StudDashboardDTO {
 	    }
 	    public void setCourseCount(int courseCount) {
 	        this.courseCount = courseCount;
-	    }
+	    } 
+	    
 
 	    public int getUserCount() {
 	        return userCount;

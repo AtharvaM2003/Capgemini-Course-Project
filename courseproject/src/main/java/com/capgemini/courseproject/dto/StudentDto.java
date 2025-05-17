@@ -9,7 +9,8 @@ public class StudentDto {
 		super();
 		this.userId = userId;
 		this.userName = userName;
-	}
+	} 
+	
 
 	public StudentDto() {
 		super();

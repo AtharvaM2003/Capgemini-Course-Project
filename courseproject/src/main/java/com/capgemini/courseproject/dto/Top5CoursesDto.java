@@ -3,16 +3,16 @@ package com.capgemini.courseproject.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class CourseEnrollmentReportDto {
-	private Long courseId;
-	private String courseTitle;
-	private String instructorName;
-	private Long totalEnrollments; 
-	
+@RequiredArgsConstructor
+public class Top5CoursesDto {
+
+	    private String courseTitle;
+	    private Long totalEnrollments;
+
 }

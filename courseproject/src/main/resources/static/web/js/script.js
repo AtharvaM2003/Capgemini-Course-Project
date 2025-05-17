@@ -327,5 +327,6 @@ function getAuthorization() {
 function logout() {
     localStorage.removeItem("token");
     localStorage.clear();
-    redirectToLogin();
+    redirectToLogin(); 
+	
 }

@@ -116,5 +116,7 @@ public class CourseController {
 		List<Top5CoursesDto> top5Courses=courseService.findTop5Courses();
 		return ResponseEntity.status(HttpStatus.OK).body(top5Courses);
 	}
-
+ 
+	
 }
+

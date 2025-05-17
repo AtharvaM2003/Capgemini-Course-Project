@@ -44,5 +44,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 		    ORDER BY totalEnrollments DESC
 		    LIMIT 5
 		""", nativeQuery = true)
-		List<Top5CoursesDto> findTop5Courses();
+		List<Top5CoursesDto> findTop5Courses(); 
+    
 }

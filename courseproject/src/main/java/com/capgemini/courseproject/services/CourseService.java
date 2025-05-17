@@ -30,5 +30,6 @@ public interface CourseService {
 
 	List<String> getCourseTitlesByInstructorId(Long instructorId);
 
-	List<Top5CoursesDto> findTop5Courses();
+	List<Top5CoursesDto> findTop5Courses(); 
+	
 }

@@ -24,5 +24,6 @@ public class StudDashboardController {
 	@GetMapping
     public ResponseEntity<StudDashboardDTO> findAllfetchDashboardCount() {
         return ResponseEntity.ok(dashboardService.fetchDashboardCount());
-    }
+    } 
+	
 }
