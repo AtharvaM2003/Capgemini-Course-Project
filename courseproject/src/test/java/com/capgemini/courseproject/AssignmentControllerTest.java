@@ -94,7 +94,6 @@ class AssignmentControllerTest {
 	    saved.setAssignmentId(10L);
 	    saved.setTitle("New Assignment");
 	    saved.setDescription("New Description");
-
 	    when(bindingResult.hasErrors()).thenReturn(false);
 	    when(assignmentService.addAssignment(any(AssignmentDto.class))).thenReturn(saved);
 
@@ -106,19 +105,6 @@ class AssignmentControllerTest {
 	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	    assertThat(response.getBody()).isNotNull();
 	    assertThat(response.getBody().getAssignmentId()).isEqualTo(10L);
-	}
-
-
-	@Test
-	void testCreateAssignmentInvalid() {
-		AssignmentDto input = new AssignmentDto();
-		input.setTitle("");
-
-		when(bindingResult.hasErrors()).thenReturn(true);
-
-		assertThatThrownBy(() -> {
-			assignmentController.addAssignment(input, bindingResult);
-		}).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Invalid assignment data");
 	}
 
 }

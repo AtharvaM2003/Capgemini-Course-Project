@@ -58,5 +58,24 @@ public class AssignmentController {
 		AssignmentDto createdAssignment = assignmentService.addAssignment(assignmentDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdAssignment);
 	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id, @Valid @RequestBody Assignment updatedAssignment,
+			BindingResult result) {
+		if (result.hasErrors()) {
 
+			throw new IllegalArgumentException(result.getFieldErrors().toString());
+		}
+		log.info("PUT /api/assignments/{} - Updating assignment", id);
+		Assignment assignment = assignmentService.updateAssignment(id, updatedAssignment);
+		if (assignment != null) {
+			log.debug("Updated assignment: {}", assignment);
+			return ResponseEntity.ok(assignment);
+		} else {
+			log.warn("Failed to update assignment with ID {} - not found", id);
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	
 }
