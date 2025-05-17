@@ -23,4 +23,5 @@ public interface UserService {
 
 	List<StudentDto> fetchAllStudentsNames();
 
+	List<User> findAllStudents();
 }

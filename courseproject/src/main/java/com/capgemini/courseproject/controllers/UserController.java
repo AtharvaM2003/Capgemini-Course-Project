@@ -91,4 +91,12 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
+	@GetMapping("/allStudents")
+    public ResponseEntity<List<User>> getAllStudents() {
+		log.info("GET /api/allStudents - Request received to fetch all student");
+        List<User> students = userService.findAllStudents();
+        log.info("GET /api/allStudents - Request received to fetch all students");
+        return new ResponseEntity<>(students, HttpStatus.OK);
+    }
+
 }

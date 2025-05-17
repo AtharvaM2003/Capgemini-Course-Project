@@ -114,4 +114,10 @@ public class UserServiceImpl implements UserService {
 
 		return userRepository.fetchStudentOfCourses(id);
 	}
+	
+
+	@Override
+    public List<User> findAllStudents() {
+        return userRepository.findAllStudents();
+    }
 }
