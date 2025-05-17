@@ -6,7 +6,6 @@ public class AssignmentDto {
 	    private String description;
 	    private Long courseId;
 	    private String courseName;
-
 	  
 	    public AssignmentDto(Long assignmentId, String title, String description, Long courseId, String courseName) {
 	        this.assignmentId = assignmentId;
