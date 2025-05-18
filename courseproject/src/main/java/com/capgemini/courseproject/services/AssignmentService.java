@@ -14,5 +14,6 @@ public interface AssignmentService {
 	
 	Assignment updateAssignment(Long assignmentId, Assignment updatedAssignment);
 	
+	void assignAssignmentToCourse(Long assignmentId, Long courseId);
 
 }

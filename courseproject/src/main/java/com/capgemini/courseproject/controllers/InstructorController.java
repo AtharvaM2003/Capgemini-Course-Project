@@ -88,4 +88,10 @@ public class InstructorController {
         List<InstructorWiseStudentDto> data = instructorService.getInstructorWiseStudentCount();
         return ResponseEntity.ok(data);
     }
+	
+	@PostMapping("/{instructorId}/assign/{courseId}")
+	public ResponseEntity<Void> enrollStudent(@PathVariable Long instructorId, @PathVariable Long courseId) {
+		instructorService.assignInstructorToCourse(instructorId, courseId);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 }

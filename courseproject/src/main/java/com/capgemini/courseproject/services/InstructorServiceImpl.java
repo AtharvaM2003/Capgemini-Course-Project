@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.courseproject.dto.InstructorWiseStudentDto;
+import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.entities.Instructor;
+import com.capgemini.courseproject.exceptions.CourseNotFoundException;
 import com.capgemini.courseproject.exceptions.InstructorNotFoundException;
+import com.capgemini.courseproject.repositories.CourseRepository;
 import com.capgemini.courseproject.repositories.InstructorRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,19 +19,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InstructorServiceImpl implements InstructorService {
 
+	private final CourseRepository courseRepository;
 	private final InstructorRepository instructorRepo;
 
 	@Autowired
-	public InstructorServiceImpl(InstructorRepository instructorRepo) {
+	public InstructorServiceImpl(CourseRepository courseRepository, InstructorRepository instructorRepo) {
 		super();
+		this.courseRepository = courseRepository;
 		this.instructorRepo = instructorRepo;
 	}
+
 
 	@Override
 	public List<Instructor> findAllInstructor() {
 		log.debug("Fetching all instructors from the repository");
 		return instructorRepo.findAll();
 	}
+
 
 	@Override
 	public Instructor findInstructorById(Long instructorId) {
@@ -77,5 +84,27 @@ public class InstructorServiceImpl implements InstructorService {
 	public List<InstructorWiseStudentDto> getInstructorWiseStudentCount() {
         return instructorRepo.fetchInstructorWiseStudentCount();
     }
+
+	@Override
+	public void assignInstructorToCourse(Long instructorId, Long courseId) {
+	    Course course = courseRepository.findById(courseId)
+	            .orElseThrow(() -> new CourseNotFoundException("Course not found with courseId: " + courseId));
+
+	    Instructor instructor = instructorRepo.findById(instructorId)
+	            .orElseThrow(() -> new InstructorNotFoundException("Instructor not found with instructorId: " + instructorId));
+
+	    if (course.getInstructor() != null) {
+	        Instructor existingInstructor = course.getInstructor();
+	        existingInstructor.getCourses().remove(course); 
+	    }
+
+	    // Assign the new instructor
+	    course.setInstructor(instructor);
+	    instructor.getCourses().add(course);
+
+	    courseRepository.save(course);
+	    instructorRepo.save(instructor);
+	}
+
 
 }

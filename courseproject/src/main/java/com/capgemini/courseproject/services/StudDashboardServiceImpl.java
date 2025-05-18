@@ -1,11 +1,11 @@
 package com.capgemini.courseproject.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.capgemini.courseproject.dto.StudDashboardDTO;
 import com.capgemini.courseproject.repositories.CourseRepository;
-import com.capgemini.courseproject.repositories.EnrollmentRepository;
 import com.capgemini.courseproject.repositories.InstructorRepository;
 import com.capgemini.courseproject.repositories.UserRepository;
 

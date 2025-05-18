@@ -3,7 +3,10 @@ package com.capgemini.courseproject.services;
 import com.capgemini.courseproject.dto.AssignmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
+import com.capgemini.courseproject.entities.Instructor;
 import com.capgemini.courseproject.exceptions.AssignmentNotFoundException;
+import com.capgemini.courseproject.exceptions.CourseNotFoundException;
+import com.capgemini.courseproject.exceptions.InstructorNotFoundException;
 import com.capgemini.courseproject.repositories.AssignmentRepository;
 import com.capgemini.courseproject.repositories.CourseRepository;
 
@@ -71,6 +74,23 @@ public class AssignmentServiceImpl implements AssignmentService {
 			return assignmentRepository.save(existingAssignment);
 		}
 		return null;
+	}
+
+	@Override
+	public void assignAssignmentToCourse(Long assignmentId, Long courseId) {
+	    Course course = courseRepository.findById(courseId)
+	            .orElseThrow(() -> new CourseNotFoundException("Course not found with courseId: " + courseId));
+
+	    Assignment assignment = assignmentRepository.findById(assignmentId)
+	            .orElseThrow(() -> new AssignmentNotFoundException("Assignment not found with assignmentId: " + assignmentId));
+
+
+	    course.getAssignments().add(assignment);
+	    assignment.setCourse(course);
+
+	 
+	    courseRepository.save(course);
+	    assignmentRepository.save(assignment);
 	}
 
 }

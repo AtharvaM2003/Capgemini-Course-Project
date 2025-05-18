@@ -18,4 +18,6 @@ public interface InstructorService {
 	boolean deleteInstructor(Long instructorId);
 
 	List<InstructorWiseStudentDto> getInstructorWiseStudentCount();
+	
+	void assignInstructorToCourse(Long instructorId, Long courseId);
 }
