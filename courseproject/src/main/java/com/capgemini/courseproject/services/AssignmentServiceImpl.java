@@ -3,6 +3,7 @@ package com.capgemini.courseproject.services;
 import com.capgemini.courseproject.dto.AssignmentDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
+import com.capgemini.courseproject.exceptions.AssignmentNotFoundException;
 import com.capgemini.courseproject.repositories.AssignmentRepository;
 import com.capgemini.courseproject.repositories.CourseRepository;
 
@@ -39,10 +40,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 		Assignment savedAssignment = assignmentRepository.save(assignment);
 
-		AssignmentDto responseDto = new AssignmentDto(savedAssignment.getAssignmentId(), savedAssignment.getTitle(),
+		return new AssignmentDto(savedAssignment.getAssignmentId(), savedAssignment.getTitle(),
 				savedAssignment.getDescription(), course.getCourseId(), course.getTitle());
-
-		return responseDto;
 	}
 
 	@Override
@@ -54,6 +53,24 @@ public class AssignmentServiceImpl implements AssignmentService {
 	@Override
 	public List<AssignmentDto> getAllAssignments() {
 		return assignmentRepository.findAllAssignmentDtos();
+	}
+
+	@Override
+	public Assignment updateAssignment(Long assignmentId, Assignment updatedAssignment) {
+		Assignment existing = assignmentRepository.findById(assignmentId).orElseThrow(() -> {
+			log.warn("Assignment not found with ID: {}", assignmentId);
+			return new AssignmentNotFoundException("Course not found with courseId" + assignmentId);
+		});
+		log.debug("Existing course data: {}", existing);
+		Optional<Assignment> existingAssignmentOpt = assignmentRepository.findById(assignmentId);
+		if (existingAssignmentOpt.isPresent()) {
+			Assignment existingAssignment = existingAssignmentOpt.get();
+			existingAssignment.setTitle(updatedAssignment.getTitle());
+			existingAssignment.setDescription(updatedAssignment.getDescription());
+
+			return assignmentRepository.save(existingAssignment);
+		}
+		return null;
 	}
 
 }

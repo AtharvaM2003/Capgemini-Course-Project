@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.capgemini.courseproject.dto.InstructorWiseStudentDto;
 import com.capgemini.courseproject.entities.Instructor;
 import com.capgemini.courseproject.exceptions.InstructorNotFoundException;
 import com.capgemini.courseproject.repositories.InstructorRepository;
@@ -71,5 +72,10 @@ public class InstructorServiceImpl implements InstructorService {
 		instructorRepo.deleteById(instructorId);
 		return false;
 	}
+	
+	@Override
+	public List<InstructorWiseStudentDto> getInstructorWiseStudentCount() {
+        return instructorRepo.fetchInstructorWiseStudentCount();
+    }
 
 }

@@ -55,16 +55,16 @@
             courses.forEach(course => {
                 const card = document.createElement('div');
                 card.className = "col-md-4 mb-4 course-card";
-                card.setAttribute('data-price', course.fees);
-                card.setAttribute('data-name', course.title.toLowerCase());
+                card.setAttribute('data-price', course.courFees);
+                card.setAttribute('data-name', course.courTitle.toLowerCase());
 
                 card.innerHTML = `
                     <div class="card shadow-sm h-100" style="cursor: pointer;">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">${course.title}</h5>
-                            <p class="card-text">${course.description}</p>
-                            <p><strong>Instructor:</strong> ${course.instructorName}</p>
-                            <p><strong>Price:</strong> ₹${course.fees}</p>
+                            <h5 class="card-title">${course.courTitle}</h5>
+                            <p class="card-text">${course.courDescription}</p>
+                            <p><strong>Instructor:</strong> ${course.instructName}</p>
+                            <p><strong>Price:</strong> ₹${course.courFees}</p>
                             <button class="btn mt-auto ${course.enrolled ? 'btn-secondary' : 'btn-primary'}" 
                                 ${course.enrolled ? 'disabled' : ''}>
                                 ${course.enrolled ? 'Enrolled' : 'Enroll'}
@@ -75,7 +75,7 @@
 
                 const enrollButton = card.querySelector('button');
                 if (!course.isEnrolled) {
-                    enrollButton.addEventListener('click', () => enrollInCourse(course.id, course.title, enrollButton));
+                    enrollButton.addEventListener('click', () => enrollInCourse(course.courId, course.courTitle, enrollButton));
                 }
 
                 courseList.appendChild(card);
@@ -84,9 +84,9 @@
 
         function enrollInCourse(courseId, courseTitle, button) {
             const enrollmentData = {
-                userid: getUserId(),
-                courseid: String(courseId),
-                enrollmentdate: new Date().toISOString().split('T')[0]
+                user:{"userId":getUserId()},
+                course:{"courseId":courseId},
+                enrollmentDate: new Date().toISOString().split('T')[0]
             };
 
             fetch(`${apiUrl}/enrollments`, {

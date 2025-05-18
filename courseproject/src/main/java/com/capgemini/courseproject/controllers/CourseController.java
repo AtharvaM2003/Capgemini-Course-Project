@@ -1,9 +1,9 @@
 package com.capgemini.courseproject.controllers;
 
+import com.capgemini.courseproject.dto.AvailableCourseDto;
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
-import com.capgemini.courseproject.dto.CourseEnrollmentReportDto;
-import com.capgemini.courseproject.dto.Top5CoursesDto;
+import com.capgemini.courseproject.dto.EnrolledCourseDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.services.CourseService;
@@ -101,20 +101,34 @@ public class CourseController {
 
 	@GetMapping("/coursereport")
 	public ResponseEntity<List<CourseEnrollmentDto>> getCourseEnrollmentReport() {
+		log.info("GET /api/courses/coursereport - Fetching course enrollment report");
 		List<CourseEnrollmentDto> report = courseService.getCourseEnrollmentReport();
+		log.debug("Returning {} records in course enrollment report", report.size());
 		return ResponseEntity.status(HttpStatus.OK).body(report);
 	}
 
-
 	@GetMapping("/instructor/{instructorId}")
 	public List<String> getCourseTitlesByInstructor(@PathVariable Long instructorId) {
-		return courseService.getCourseTitlesByInstructorId(instructorId);
+		log.info("GET /api/courses/instructor/{} - Fetching course titles by instructor ID", instructorId);
+		List<String> titles = courseService.getCourseTitlesByInstructorId(instructorId);
+		log.debug("Found {} course titles for instructor ID {}", titles.size(), instructorId);
+		return titles;
 	}
-	
-	@GetMapping("/findTop5Courses")
-	public ResponseEntity<List<Top5CoursesDto>> findTop5Courses(){
-		List<Top5CoursesDto> top5Courses =courseService.findTop5Courses();
-		return ResponseEntity.status(HttpStatus.OK).body(top5Courses);
+
+	@GetMapping("/available/{userid}")
+	public ResponseEntity<List<AvailableCourseDto>> findCoursesWithIsEnrollment(@PathVariable Long userid) {
+		log.info("GET /api/courses/available/{} - Fetching available courses for user", userid);
+		List<AvailableCourseDto> availableCourses = courseService.findCoursesWithIsEnrollment(userid);
+		log.debug("Returning {} available courses for user ID {}", availableCourses.size(), userid);
+		return ResponseEntity.status(HttpStatus.OK).body(availableCourses);
+	}
+
+	@GetMapping("/enrolled/{userid}")
+	public ResponseEntity<List<EnrolledCourseDto>> enrolledCoursesByStudent(@PathVariable Long userid) {
+		log.info("GET /api/courses/enrolled/{} - Fetching enrolled courses for student", userid);
+		List<EnrolledCourseDto> enrolledCourses = courseService.enrolledCoursesByStudent(userid);
+		log.debug("Returning {} enrolled courses for user ID {}", enrolledCourses.size(), userid);
+		return ResponseEntity.status(HttpStatus.OK).body(enrolledCourses);
 	}
 
 }
