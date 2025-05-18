@@ -93,8 +93,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		Map<String, Object> errorDetails = new HashMap<>();
 		errorDetails.put(TIMESTAMP, LocalDateTime.now());
 		errorDetails.put(MESSAGE, i.getMessage());
-		errorDetails.put(STATUS, HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+		errorDetails.put(STATUS, HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
