@@ -4,6 +4,7 @@ import com.capgemini.courseproject.dto.AvailableCourseDto;
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
 import com.capgemini.courseproject.dto.EnrolledCourseDto;
+import com.capgemini.courseproject.dto.Top5CoursesDto;
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.services.CourseService;
@@ -129,6 +130,12 @@ public class CourseController {
 		List<EnrolledCourseDto> enrolledCourses = courseService.enrolledCoursesByStudent(userid);
 		log.debug("Returning {} enrolled courses for user ID {}", enrolledCourses.size(), userid);
 		return ResponseEntity.status(HttpStatus.OK).body(enrolledCourses);
+	}
+	
+	@GetMapping("/findTop5Courses")
+	public ResponseEntity<List<Top5CoursesDto>> findTop5Courses(){
+		List<Top5CoursesDto> top5Courses =courseService.findTop5Courses();
+		return ResponseEntity.status(HttpStatus.OK).body(top5Courses);
 	}
 
 }

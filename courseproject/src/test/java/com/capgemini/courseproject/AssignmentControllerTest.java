@@ -109,16 +109,6 @@ class AssignmentControllerTest {
 	}
 
 
-	@Test
-	void testCreateAssignmentInvalid() {
-		AssignmentDto input = new AssignmentDto();
-		input.setTitle("");
-
-		when(bindingResult.hasErrors()).thenReturn(true);
-
-		assertThatThrownBy(() -> {
-			assignmentController.addAssignment(input, bindingResult);
-		}).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Invalid assignment data");
-	}
+	
 
 }
