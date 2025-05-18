@@ -3,7 +3,11 @@ package com.capgemini.courseproject.services;
 import com.capgemini.courseproject.dto.AvailableCourseDto;
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
+
+import com.capgemini.courseproject.dto.Top5CoursesDto;
+
 import com.capgemini.courseproject.dto.EnrolledCourseDto;
+
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import java.util.List;
@@ -27,8 +31,13 @@ public interface CourseService {
 
 	List<String> getCourseTitlesByInstructorId(Long instructorId);
 
+
+	List<Top5CoursesDto> findTop5Courses(); 
+	
+
 	public List<AvailableCourseDto> findCoursesWithIsEnrollment(Long userId);
 
 	public List<EnrolledCourseDto> enrolledCoursesByStudent(Long studentId);
+
 
 }

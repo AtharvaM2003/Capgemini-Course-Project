@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.capgemini.courseproject.dto.InstructorWiseStudentDto;
 import com.capgemini.courseproject.entities.Instructor;
 import com.capgemini.courseproject.services.InstructorService;
 
@@ -82,10 +81,5 @@ public class InstructorController {
 		log.info("Instructor with ID {} successfully deleted", id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
-	
-	@GetMapping("/iwisestudent")
-    public ResponseEntity<List<InstructorWiseStudentDto>> getInstructorWiseStudentCount() {
-        List<InstructorWiseStudentDto> data = instructorService.getInstructorWiseStudentCount();
-        return ResponseEntity.ok(data);
-    }
+
 }

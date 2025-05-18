@@ -3,7 +3,11 @@ package com.capgemini.courseproject.services;
 import com.capgemini.courseproject.dto.AvailableCourseDto;
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
+
+import com.capgemini.courseproject.dto.Top5CoursesDto;
+
 import com.capgemini.courseproject.dto.EnrolledCourseDto;
+
 import com.capgemini.courseproject.entities.Assignment;
 import com.capgemini.courseproject.entities.Course;
 import com.capgemini.courseproject.exceptions.CourseNotFoundException;
@@ -120,5 +124,11 @@ public class CourseServiceImple implements CourseService {
 		log.debug("Found {} enrolled courses for student ID: {}", enrolledCourses.size(), studentId);
 		return enrolledCourses;
 	}
+	
+	@Override
+	public List<Top5CoursesDto> findTop5Courses() {
+		return courseRepository.findTop5Courses();
+	} 
+	
 
 }

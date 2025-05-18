@@ -33,11 +33,11 @@ public class Instructor {
 	private List<Course> courses = new ArrayList<>();
 
 	public Instructor() {
-		
+		super();
 	}
 
 	public Instructor(Long instructorId, String name, String expertise, List<Course> courses) {
-		
+		super();
 		this.instructorId = instructorId;
 		this.name = name;
 		this.expertise = expertise;

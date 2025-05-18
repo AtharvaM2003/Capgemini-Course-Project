@@ -3,10 +3,10 @@ package com.capgemini.courseproject.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import com.capgemini.courseproject.dto.CourseInfoDto;
 
@@ -26,11 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class EnrollmentServiceImpl implements EnrollmentService {
 
 	EnrollmentRepository enrollmentRepository;
-
+	
 	CourseRepository courseRepository;
-
+	
 	UserRepository userRepository;
-
+	
 	@Autowired
 	public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, CourseRepository courseRepository,
 			UserRepository userRepository) {
@@ -62,19 +62,34 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		return enrollmentRepository.findById(enrollmentId);
 
 	}
-
+	
 	@Override
 	public List<EnrollmentReportDTO> getEnrollmentReport() {
-		List<Enrollment> enrollments = enrollmentRepository.findAll();
+	    List<Enrollment> enrollments = enrollmentRepository.findAll();
 
-		return enrollments.stream().map(enroll -> {
-			String courseTitle = enroll.getCourse() != null ? enroll.getCourse().getTitle() : "Unknown Course";
+	    return enrollments.stream().map(enroll -> {
+	        String courseTitle = "Unknown Course";
+	        String studentName = "Unknown Student";
 
-			String studentName = enroll.getUser() != null ? enroll.getUser().getUserName() : "Unknown Student";
+	        if (enroll.getCourse() != null) {
+	            courseTitle = courseRepository.findById(enroll.getCourse().getCourseId())
+	                    .map(Course::getTitle)
+	                    .orElse("Unknown Course");
+	        }
 
-			return new EnrollmentReportDTO(enroll.getEnrollmentId(), courseTitle, studentName,
-					enroll.getEnrollmentDate());
-		}).toList();
+	        if (enroll.getUser() != null) {
+	            studentName = userRepository.findById(enroll.getUser().getUserId())
+	                    .map(User::getUserName)
+	                    .orElse("Unknown Student");
+	        }
+
+	        return new EnrollmentReportDTO(
+	                enroll.getEnrollmentId(),
+	                courseTitle,
+	                studentName,
+	                enroll.getEnrollmentDate()
+	        );
+	    }).collect(Collectors.toList());
 	}
 
 	@Override

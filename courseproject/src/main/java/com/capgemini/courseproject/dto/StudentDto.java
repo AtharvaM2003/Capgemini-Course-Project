@@ -9,7 +9,8 @@ public class StudentDto {
 		super();
 		this.userId = userId;
 		this.userName = userName;
-	}
+	} 
+	
 
 	public StudentDto() {
 		super();
@@ -30,5 +31,4 @@ public class StudentDto {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
 }

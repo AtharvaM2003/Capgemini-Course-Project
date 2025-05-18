@@ -12,7 +12,11 @@ import org.springframework.stereotype.Repository;
 import com.capgemini.courseproject.dto.AvailableCourseDto;
 import com.capgemini.courseproject.dto.CourseDto;
 import com.capgemini.courseproject.dto.CourseEnrollmentDto;
+
+import com.capgemini.courseproject.dto.Top5CoursesDto;
+
 import com.capgemini.courseproject.dto.EnrolledCourseDto;
+
 import com.capgemini.courseproject.entities.Course;
 
 @Repository
@@ -33,6 +37,19 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 			+ "FROM Course c")
 	List<CourseDto> getAllCourses();
 
+
+//    long count();
+    
+    @Query(value = """
+		    SELECT c.title AS courseTitle, COUNT(e.courseid) AS totalEnrollments
+		    FROM enrollment e
+		    JOIN course c ON e.courseid = c.id
+		    GROUP BY c.title
+		    ORDER BY totalEnrollments DESC
+		    LIMIT 5
+		""", nativeQuery = true)
+		List<Top5CoursesDto> findTop5Courses(); 
+    
 	long count();
 
 	@Query("SELECT new com.capgemini.courseproject.dto.AvailableCourseDto("
@@ -46,5 +63,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 			+ "JOIN Instructor i ON i.instructorId = c.instructor.instructorId " + "JOIN User u ON u.userId = e.user.userId "
 			+ "WHERE u.userId = ?1")
 	List<EnrolledCourseDto> enrolledCoursesByStudent(Long studentId);
+
 
 }
