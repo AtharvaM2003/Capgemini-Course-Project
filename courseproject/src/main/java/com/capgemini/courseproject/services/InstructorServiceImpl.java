@@ -77,7 +77,7 @@ public class InstructorServiceImpl implements InstructorService {
 		}
 		log.debug("Deleting instructor by ID: {}", instructorId);
 		instructorRepo.deleteById(instructorId);
-		return false;
+		return true;
 	}
 	
 	@Override
