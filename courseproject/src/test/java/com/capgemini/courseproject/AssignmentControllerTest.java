@@ -96,12 +96,12 @@ class AssignmentControllerTest {
 	    saved.setDescription("New Description");
 
 	    when(bindingResult.hasErrors()).thenReturn(false);
-	    when(assignmentService.addAssignment(any(AssignmentDto.class))).thenReturn(saved);
+	    when(assignmentService.addAssignmentInTable(any(AssignmentDto.class))).thenReturn(saved);
 
-	    ResponseEntity<AssignmentDto> response = assignmentController.addAssignment(input, bindingResult);
+	    ResponseEntity<AssignmentDto> response = assignmentController.addAssignmentInTable(input, bindingResult);
 
 	    verify(bindingResult).hasErrors();
-	    verify(assignmentService).addAssignment(any(AssignmentDto.class));
+	    verify(assignmentService).addAssignmentInTable(any(AssignmentDto.class));
 
 	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	    assertThat(response.getBody()).isNotNull();

@@ -17,11 +17,11 @@ public class Assignment {
 	@Column(name = "assignment_id")
 	private Long assignmentId;
 
-	@NotBlank
+	@NotBlank(message="title is mandatory")
 	@Column(name = "title")
 	private String title;
 
-	@NotBlank
+	@NotBlank(message="description is mandatory")
 	@Column(name = "description")
 	private String description;
 

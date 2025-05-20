@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class UserController {
 	}
 
 	@GetMapping
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<List<User>> getAllUsers() {
 		log.info("GET /api/users - Request received to fetch all users");
 		List<User> userList = userService.findAllUser();
@@ -37,6 +39,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<User> getUserById(@PathVariable Long id) {
 		log.info("GET /api/users/{} - Request received to fetch user by ID", id);
 		User user = userService.findUserById(id);

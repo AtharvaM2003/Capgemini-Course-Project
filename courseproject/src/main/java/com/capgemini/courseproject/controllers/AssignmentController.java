@@ -59,15 +59,26 @@ public class AssignmentController {
 		return assignment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
-	public ResponseEntity<AssignmentDto> addAssignment(@RequestBody AssignmentDto assignmentDto,
+	@PostMapping("/display")
+	public ResponseEntity<Assignment> addAssignment(@RequestBody Assignment assignment,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			throw new IllegalArgumentException(bindingResult.getFieldErrors().toString());
 		}
-		AssignmentDto createdAssignment = assignmentService.addAssignment(assignmentDto);
+		Assignment createdAssignment = assignmentService.addAssignment(assignment);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdAssignment);
 	}
+	
+	@PostMapping
+	public ResponseEntity<AssignmentDto> addAssignmentInTable(@RequestBody AssignmentDto assignmentDto,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException(bindingResult.getFieldErrors().toString());
+		}
+		AssignmentDto createdAssignment = assignmentService.addAssignmentInTable(assignmentDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdAssignment);
+	}
+	
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id, @Valid @RequestBody Assignment updatedAssignment,

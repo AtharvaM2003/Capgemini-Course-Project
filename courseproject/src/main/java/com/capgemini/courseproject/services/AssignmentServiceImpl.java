@@ -32,7 +32,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 	}
 
 	@Override
-	public AssignmentDto addAssignment(AssignmentDto dto) {
+	public Assignment addAssignment(Assignment assignment) {
+		
+		return assignmentRepository.save(assignment);
+	}
+	
+	@Override
+	public AssignmentDto addAssignmentInTable(AssignmentDto dto) {
 		Course course = courseRepository.findById(dto.getCourseId())
 				.orElseThrow(() -> new RuntimeException("Course not found"));
 
@@ -46,6 +52,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		return new AssignmentDto(savedAssignment.getAssignmentId(), savedAssignment.getTitle(),
 				savedAssignment.getDescription(), course.getCourseId(), course.getTitle());
 	}
+
 
 	@Override
 	public Optional<Assignment> getAssignmentById(Long id) {
@@ -84,11 +91,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 	    Assignment assignment = assignmentRepository.findById(assignmentId)
 	            .orElseThrow(() -> new AssignmentNotFoundException("Assignment not found with assignmentId: " + assignmentId));
 
-
 	    course.getAssignments().add(assignment);
 	    assignment.setCourse(course);
-
-	 
 	    courseRepository.save(course);
 	    assignmentRepository.save(assignment);
 	}

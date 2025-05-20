@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AssignmentService {
-	AssignmentDto addAssignment(AssignmentDto assignmentDto);
+	Assignment addAssignment(Assignment assignment);
+	
+	AssignmentDto addAssignmentInTable(AssignmentDto assignmentDto);
 
 	Optional<Assignment> getAssignmentById(Long assignmentId);
 
